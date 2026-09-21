@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Siva Valli Vilas Jewellers - Customer Follow-Up Dashboard</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&family=General+Sans:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --brand-gold:#f8d65a;--brand-gold-light:#fbe98a;--brand-gold-dark:#d4b932;
+  --brand-gray:#646767;--brand-gray-light:#8a8d8d;--brand-gray-dark:#4a4d4d;
+  --brand-black:#111111;--brand-cream:#faf8f3;--brand-warm-white:#fefcfa;
+  --text-primary:#111111;--text-secondary:#646767;--text-muted:#8a8d8d;
+  --border:#e5e2db;--border-light:#f0ede8;
+  --urgent:#C62828;--week:#E65100;--days:#F57F17;--bargain:#6A1B9A;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 8px 24px rgba(0,0,0,0.12);
+  --radius-sm:6px;--radius-md:10px;--radius-lg:14px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'General Sans',system-ui,sans-serif;background:var(--brand-cream);color:var(--text-primary);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;width:250px;height:100vh;background:linear-gradient(180deg,var(--brand-black),#1a1a1a);z-index:1000;display:flex;flex-direction:column;overflow:hidden}
+.sidebar-header{padding:18px 18px 14px;border-bottom:1px solid rgba(248,214,90,0.15);display:flex;align-items:center;gap:10px}
+.sidebar-logo{width:42px;height:42px;background:var(--brand-gold);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-family:'Urbanist',sans-serif;font-size:13px;font-weight:700;color:var(--brand-black);flex-shrink:0}
+.sidebar-brand h2{font-family:'Urbanist',sans-serif;font-size:14px;font-weight:700;color:#fff;white-space:nowrap}
+.sidebar-brand span{font-size:9px;color:var(--brand-gold);text-transform:uppercase;letter-spacing:1px}
+.sidebar-nav{flex:1;padding:10px 8px;overflow-y:auto}
+.sidebar-nav::-webkit-scrollbar{width:3px}
+.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(248,214,90,0.3);border-radius:3px}
+.nav-section{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(248,214,90,0.4);padding:12px 10px 4px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);color:rgba(255,255,255,0.6);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;margin-bottom:1px;position:relative;white-space:nowrap}
+.nav-item:hover{background:rgba(248,214,90,0.1);color:#fff}
+.nav-item.active{background:rgba(248,214,90,0.2);color:var(--brand-gold);font-weight:600}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:18px;background:var(--brand-gold);border-radius:0 3px 3px 0}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:0.7}
+.nav-item.active svg{opacity:1}
+.nav-badge{margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;min-width:18px;text-align:center;background:rgba(248,214,90,0.2);color:var(--brand-gold)}
+.nav-badge.urgent{background:var(--urgent);color:#fff}
+.nav-badge.week{background:var(--week);color:#fff}
+.nav-badge.days{background:var(--days);color:#fff}
+.nav-badge.bargain{background:var(--bargain);color:#fff}
+.nav-badge.completed{background:#2E7D32;color:#fff}
+.sidebar-footer{padding:14px 18px;border-top:1px solid rgba(248,214,90,0.15);font-size:9px;color:rgba(248,214,90,0.4);text-align:center}
+
+/* MAIN */
+.main-content{margin-left:250px;min-height:100vh;transition:margin-left 0.3s}
+
+/* TOP HEADER */
+.top-header{background:#fff;border-bottom:2px solid var(--brand-gold);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:900;box-shadow:var(--shadow-sm)}
+.top-header-left{display:flex;align-items:center;gap:14px}
+.top-header h1{font-family:'Urbanist',sans-serif;font-size:17px;font-weight:700;color:var(--brand-black)}
+.header-date{font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:5px}
+.header-date svg{width:13px;height:13px;color:var(--brand-gold)}
+.top-header-right{display:flex;align-items:center;gap:12px}
+.brand-badge-left{font-family:'Urbanist',sans-serif;font-size:13px;font-weight:700;color:var(--brand-black);background:var(--brand-cream);padding:6px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);white-space:nowrap}
+.brand-badge-right{display:flex;align-items:center;gap:8px;padding:6px 14px;border:2px solid var(--brand-gold);border-radius:var(--radius-sm);background:rgba(248,214,90,0.08)}
+.cb-logo{font-family:'Cambria',serif;font-size:16px;font-weight:700;color:var(--brand-gold-dark)}
+.brand-badge-right span{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600}
+
+/* PAGE CONTENT */
+.page-content{padding:20px 24px}
+.page-section{display:none}
+.page-section.active{display:block}
+
+/* SLICER BAR */
+.slicer-bar{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;box-shadow:var(--shadow-sm)}
+.slicer-label{font-size:12px;font-weight:600;color:var(--text-secondary);white-space:nowrap}
+.slicer{padding:8px 14px;border:2px solid var(--border);border-radius:20px;background:#fff;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;white-space:nowrap;color:var(--text-muted)}
+.slicer:hover{border-color:var(--brand-gold);color:var(--brand-gold-dark)}
+.slicer.active{background:var(--brand-gold);color:var(--brand-black);border-color:var(--brand-gold)}
+.slicer.urgent.active{background:var(--urgent);border-color:var(--urgent);color:#fff}
+.slicer.week.active{background:var(--week);border-color:var(--week);color:#fff}
+.slicer.days.active{background:var(--days);border-color:var(--days);color:#fff}
+.slicer.bargain.active{background:var(--bargain);border-color:var(--bargain);color:#fff}
+.slicer.notpri.active{background:var(--brand-gray);border-color:var(--brand-gray);color:#fff}
+.slicer-count{font-size:10px;opacity:0.8}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+.kpi-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;position:relative;overflow:hidden;box-shadow:var(--shadow-sm);transition:all 0.2s}
+.kpi-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-card.total::before{background:var(--brand-gold)}
+.kpi-card.urgent::before{background:var(--urgent)}
+.kpi-card.week::before{background:var(--week)}
+.kpi-card.days::before{background:var(--days)}
+.kpi-card.bargain::before{background:var(--bargain)}
+.kpi-card.completed::before{background:#2E7D32}
+.kpi-card.notpri::before{background:var(--brand-gray)}
+.kpi-card.gold::before{background:var(--brand-gold)}
+.kpi-card.silver::before{background:#78909C}
+.kpi-icon{width:34px;height:34px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.kpi-icon svg{width:18px;height:18px}
+.kpi-icon.total{background:rgba(248,214,90,0.15);color:var(--brand-gold-dark)}
+.kpi-icon.urgent{background:rgba(198,40,40,0.1);color:var(--urgent)}
+.kpi-icon.week{background:rgba(230,81,0,0.1);color:var(--week)}
+.kpi-icon.days{background:rgba(245,127,23,0.1);color:var(--days)}
+.kpi-icon.bargain{background:rgba(106,27,154,0.1);color:var(--bargain)}
+.kpi-icon.completed{background:rgba(46,125,50,0.1);color:#2E7D32}
+.kpi-icon.notpri{background:rgba(100,103,103,0.1);color:var(--brand-gray)}
+.kpi-icon.gold{background:rgba(248,214,90,0.15);color:var(--brand-gold-dark)}
+.kpi-icon.silver{background:rgba(120,144,156,0.1);color:#78909C}
+.kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:3px}
+.kpi-value{font-family:'Urbanist',sans-serif;font-size:26px;font-weight:700;color:var(--text-primary);line-height:1.1}
+.kpi-sub{font-size:10px;color:var(--text-muted);margin-top:3px}
+
+/* SEARCH & FILTER */
+.search-filter-bar{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
+.search-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search-box{flex:1;min-width:220px;position:relative}
+.search-box input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;color:var(--text-primary);background:var(--brand-warm-white);transition:all 0.2s;font-family:'General Sans',sans-serif}
+.search-box input:focus{outline:none;border-color:var(--brand-gold);box-shadow:0 0 0 3px rgba(248,214,90,0.15)}
+.search-box svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-muted)}
+.filter-group{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.filter-select{padding:8px 26px 8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:11px;color:var(--text-secondary);background:var(--brand-warm-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23646767'/%3E%3C/svg%3E") no-repeat right 8px center;appearance:none;cursor:pointer;font-family:'General Sans',sans-serif}
+.filter-select:focus{outline:none;border-color:var(--brand-gold)}
+.filter-btn{padding:8px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;font-size:11px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.filter-btn:hover{border-color:var(--brand-gold);color:var(--brand-gold-dark)}
+.filter-btn.reset{color:var(--urgent);border-color:#EF5350}
+.filter-btn.reset:hover{background:var(--urgent);color:#fff}
+
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.chart-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm)}
+.chart-card.full{grid-column:1/-1}
+.chart-card h3{font-family:'Urbanist',sans-serif;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:14px}
+.chart-container{position:relative;width:100%;height:260px}
+.chart-container.tall{height:320px}
+
+/* TABLE */
+.table-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:20px;box-shadow:var(--shadow-sm)}
+.table-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.table-header h3{font-family:'Urbanist',sans-serif;font-size:14px;font-weight:600;color:var(--text-primary)}
+.table-header .table-actions{display:flex;gap:8px;align-items:center}
+.table-wrapper{overflow-x:auto;max-height:500px;overflow-y:auto}
+.table-wrapper::-webkit-scrollbar{width:5px;height:5px}
+.table-wrapper::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead{position:sticky;top:0;z-index:10}
+th{text-align:left;padding:10px 12px;background:var(--brand-black);color:var(--brand-gold);font-family:'Urbanist',sans-serif;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--border-light);color:var(--text-secondary);vertical-align:middle}
+tr:hover td{background:rgba(248,214,90,0.06)}
+tr.cursor-pointer{cursor:pointer}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:600;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%}
+.badge.urgent{background:#FFEBEE;color:var(--urgent)}.badge.urgent::before{background:var(--urgent)}
+.badge.week{background:#FFF3E0;color:var(--week)}.badge.week::before{background:var(--week)}
+.badge.days{background:#FFF8E1;color:#F57F17}.badge.days::before{background:#F57F17}
+.badge.bargain{background:#F3E5F5;color:var(--bargain)}.badge.bargain::before{background:var(--bargain)}
+.badge.not-priority{background:#F5F5F5;color:var(--brand-gray)}.badge.not-priority::before{background:var(--brand-gray)}
+.badge.completed{background:#E8F5E9;color:#2E7D32}.badge.completed::before{background:#2E7D32}
+.badge.gold{background:rgba(248,214,90,0.2);color:var(--brand-gold-dark)}.badge.gold::before{background:var(--brand-gold)}
+.badge.silver{background:#ECEFF1;color:#546E7A}.badge.silver::before{background:#78909C}
+.badge.approved{background:#E8F5E9;color:#2E7D32}.badge.approved::before{background:#2E7D32}
+.badge.not-approved{background:#FFEBEE;color:var(--urgent)}.badge.not-approved::before{background:var(--urgent)}
+.badge.pending{background:#FFF3E0;color:var(--week)}.badge.pending::before{background:var(--week)}
+.badge.na{background:#F5F5F5;color:var(--brand-gray)}.badge.na::before{background:var(--brand-gray)}
+
+/* FOLLOW-UP PERCENT */
+.fu-pct{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+.fu-pct.good{background:#E8F5E9;color:#2E7D32}
+.fu-pct.warn{background:#FFF3E0;color:#E65100}
+.fu-pct{background:#fff;color:var(--urgent)}
+
+/* ACTION BUTTONS */
+.action-btns{display:flex;gap:3px;flex-wrap:nowrap}
+.action-btn{padding:4px 7px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;font-size:10px}
+.action-btn svg{width:12px;height:12px}
+.action-btn.call{color:#2E7D32}.action-btn.call:hover{background:#2E7D32;color:#fff;border-color:#2E7D32}
+.action-btn.whatsapp{color:#25D366}.action-btn.whatsapp:hover{background:#25D366;color:#fff;border-color:#25D366}
+.action-btn.view{color:var(--brand-gold-dark)}.action-btn.view:hover{background:var(--brand-gold);color:var(--brand-black);border-color:var(--brand-gold)}
+
+/* ACTION PLAN CARDS */
+.followup-cards{display:flex;flex-direction:column;gap:12px}
+.followup-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;box-shadow:var(--shadow-sm);transition:all 0.2s}
+.followup-card:hover{box-shadow:var(--shadow-md)}
+.followup-card.priority-urgent{border-left:4px solid var(--urgent)}
+.followup-card.priority-week{border-left:4px solid var(--week)}
+.followup-card.priority-days{border-left:4px solid var(--days)}
+.followup-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.followup-avatar.urgent{background:var(--urgent)}.followup-avatar.week{background:var(--week)}.followup-avatar.days{background:var(--days)}
+.followup-info h4{font-family:'Urbanist',sans-serif;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:2px}
+.followup-info .meta{font-size:11px;color:var(--text-muted);display:flex;gap:10px;flex-wrap:wrap}
+.followup-info .meta span{display:flex;align-items:center;gap:3px}
+.followup-info .meta svg{width:11px;height:11px}
+.followup-info .product-info{font-size:11px;color:var(--text-secondary);margin-top:3px}
+.followup-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.btn-sm{padding:6px 10px;border-radius:var(--radius-sm);font-size:10px;font-weight:600;cursor:pointer;border:1px solid;transition:all 0.2s;display:flex;align-items:center;gap:3px;white-space:nowrap;text-decoration:none}
+.btn-call{border-color:#2E7D32;color:#2E7D32;background:#fff}.btn-call:hover{background:#2E7D32;color:#fff}
+.btn-whatsapp{border-color:#25D366;color:#25D366;background:#fff}.btn-whatsapp:hover{background:#25D366;color:#fff}
+
+/* EXPORT */
+.export-btn{padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;font-size:11px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px}
+.export-btn:hover{border-color:var(--brand-gold);color:var(--brand-gold-dark)}
+.header-btn{padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;font-size:11px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px}
+.header-btn:hover{border-color:var(--brand-gold);color:var(--brand-gold-dark)}
+.header-btn.primary{background:var(--brand-gold);color:var(--brand-black);border-color:var(--brand-gold)}
+.header-btn.primary:hover{background:var(--brand-gold-light)}
+.refresh-spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sync-status{display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:11px;color:var(--text-muted);background:var(--brand-warm-white)}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#2E7D32;flex-shrink:0}
+.sync-dot.offline{background:var(--brand-gold)}
+.sync-dot.error{background:var(--urgent)}
+
+/* MODAL */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:var(--radius-lg);width:100%;max-width:680px;max-height:90vh;overflow:hidden;box-shadow:var(--shadow-lg);display:flex;flex-direction:column}
+.modal-header{padding:18px 22px;border-bottom:2px solid var(--brand-gold);display:flex;align-items:center;justify-content:space-between;background:var(--brand-black);color:var(--brand-gold)}
+.modal-header h3{font-family:'Urbanist',sans-serif;font-size:16px;font-weight:600}
+.modal-close{width:30px;height:30px;border-radius:50%;border:none;background:rgba(248,214,90,0.2);color:var(--brand-gold);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:rgba(248,214,90,0.3)}
+.modal-body{padding:22px;overflow-y:auto;flex:1}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.detail-item{padding:10px;background:var(--brand-cream);border-radius:var(--radius-md)}
+.detail-item .label{font-size:9px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);font-weight:600;margin-bottom:3px}
+.detail-item .value{font-size:13px;font-weight:500;color:var(--text-primary)}
+.detail-item.full{grid-column:1/-1}
+.btn{padding:9px 18px;border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:5px;font-family:'General Sans',sans-serif}
+.btn-primary{background:var(--brand-gold);color:var(--brand-black)}.btn-primary:hover{background:var(--brand-gold-light)}
+.btn-secondary{background:var(--brand-cream);color:var(--text-secondary);border:1px solid var(--border)}.btn-secondary:hover{background:var(--border)}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--brand-black);color:var(--brand-gold);padding:12px 18px;border-radius:var(--radius-md);font-size:12px;font-weight:500;box-shadow:var(--shadow-lg);z-index:3000;display:flex;align-items:center;gap:8px;transform:translateY(100px);opacity:0;transition:all 0.3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast svg{width:16px;height:16px;flex-shrink:0}
+
+/* LOADING */
+.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(250,248,243,0.9);z-index:5000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--brand-gold);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'Urbanist',sans-serif;font-size:13px;color:var(--text-muted);font-weight:500}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:50px 20px;color:var(--text-muted)}
+.empty-state h3{font-family:'Urbanist',sans-serif;font-size:15px;color:var(--text-secondary);margin-bottom:6px}
+.empty-state p{font-size:12px}
+
+/* PRINT */
+@media print{.sidebar,.top-header,.slicer-bar,.search-filter-bar,.export-btn,.action-btns,.btn-sm{display:none!important}.main-content{margin-left:0!important}.page-content{padding:10px!important}}
+
+/* RESPONSIVE */
+@media(max-width:1024px){.charts-grid{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.sidebar{width:0;transform:translateX(-100%)}.sidebar.open{width:250px;transform:translateX(0)}.main-content{margin-left:0}.top-header{padding:10px 14px}.page-content{padding:14px}.search-row{flex-direction:column}.filter-group{width:100%}.filter-select{flex:1}.followup-card{grid-template-columns:1fr;gap:10px}.kpi-grid{grid-template-columns:1fr 1fr}.charts-grid{grid-template-columns:1fr}.brand-badge-left{display:none}.mobile-menu-btn{display:flex;align-items:center;justify-content:center;padding:7px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;cursor:pointer}}
+.sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:999}
+.sidebar-overlay.show{display:block}
+@media(min-width:769px){.mobile-menu-btn{display:none}}
+.amount{font-weight:600;color:var(--text-primary)}
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script>
+    // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+    // Leave empty to use local data.js file instead
+    var SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwE-t6RwKrceGr3W5ZiFHUjMDKKayNu6Un0MCtlSbB3SwMSnTcIU6fHVjN6q9rHbCzRkA/exec';
+  </script>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading Dashboard...</div>
+</div>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">SVVJ</div>
+    <div class="sidebar-brand">
+      <h2>Siva Valli Vilas</h2>
+      <span>Jewellers</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active" onclick="navigateTo('dashboard',this)" data-page="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" onclick="navigateTo('action-plan',this)" data-page="action-plan">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Action Plan
+      <span class="nav-badge urgent" id="navBadgeAction">0</span>
+    </div>
+
+    <div class="nav-section">Priority Follow-Up</div>
+    <div class="nav-item" onclick="navigateTo('urgent',this)" data-page="urgent">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>
+      URGENT
+      <span class="nav-badge urgent" id="navBadgeUrgent">0</span>
+    </div>
+    <div class="nav-item" onclick="navigateTo('week',this)" data-page="week">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Within a Week
+      <span class="nav-badge week" id="navBadgeWeek">0</span>
+    </div>
+    <div class="nav-item" onclick="navigateTo('days',this)" data-page="days">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+      Within 2-4 Days
+      <span class="nav-badge days" id="navBadgeDays">0</span>
+    </div>
+
+    <div class="nav-section">Other Categories</div>
+    <div class="nav-item" onclick="navigateTo('bargain',this)" data-page="bargain">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Bargain Customers
+      <span class="nav-badge bargain" id="navBadgeBargain">0</span>
+    </div>
+    <div class="nav-item" onclick="navigateTo('not-priority',this)" data-page="not-priority">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Not Priority
+      <span class="nav-badge" id="navBadgeNotPri">0</span>
+    </div>
+    <div class="nav-item" onclick="navigateTo('completed',this)" data-page="completed">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Completed Sales
+      <span class="nav-badge completed" id="navBadgeCompleted">0</span>
+    </div>
+
+    <div class="nav-section">Records</div>
+    <div class="nav-item" onclick="navigateTo('all-customers',this)" data-page="all-customers">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      All Customers
+    </div>
+
+    <div class="nav-section">Follow-Up Tracking</div>
+    <div class="nav-item" onclick="navigateTo('followup',this)" data-page="followup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      Follow-Up Tracking
+    </div>
+
+    <div class="nav-section">Analytics</div>
+    <div class="nav-item" onclick="navigateTo('reports',this)" data-page="reports">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Reports & Charts
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    Siva Valli Vilas Jewellers<br>Consulting & Beyond
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- TOP HEADER -->
+  <header class="top-header">
+    <div class="top-header-left">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div>
+        <h1 id="pageTitle">Customer Follow-Up Dashboard</h1>
+        <div class="header-date">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span id="todayDate"></span>
+        </div>
+      </div>
+    </div>
+    <div class="top-header-right">
+      <div class="sync-status" id="syncStatus" title="Data source">
+        <span class="sync-dot" id="syncDot"></span>
+        <span id="syncLabel">Local Data</span>
+      </div>
+      <button class="header-btn" onclick="refreshData()" id="refreshBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Refresh
+      </button>
+      <div class="brand-badge-left">SIVA VALLI VILAS JEWELLERS</div>
+      <div class="brand-badge-right">
+        <div class="cb-logo">C&B</div>
+        <span>Consulting & Beyond</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-content">
+
+    <!-- ==================== DASHBOARD ==================== -->
+    <div class="page-section active" id="page-dashboard">
+
+      <!-- PRIORITY SLICERS -->
+      <div class="slicer-bar" id="slicerBar">
+        <div class="slicer-label">Priority Filter:</div>
+        <button class="slicer active" data-slicer="ALL" onclick="applySlicer('ALL',this)">ALL <span class="slicer-count" id="slicerAll">0</span></button>
+        <button class="slicer urgent" data-slicer="URGENT" onclick="applySlicer('URGENT',this)">URGENT <span class="slicer-count" id="slicerUrgent">0</span></button>
+        <button class="slicer week" data-slicer="WITHIN A WEEK" onclick="applySlicer('WITHIN A WEEK',this)">WITHIN A WEEK <span class="slicer-count" id="slicerWeek">0</span></button>
+        <button class="slicer days" data-slicer="WITHIN 2 - 4 DAYS" onclick="applySlicer('WITHIN 2 - 4 DAYS',this)">2-4 DAYS <span class="slicer-count" id="slicerDays">0</span></button>
+        <button class="slicer bargain" data-slicer="BARGAIN CUSTOMER" onclick="applySlicer('BARGAIN CUSTOMER',this)">BARGAIN <span class="slicer-count" id="slicerBargain">0</span></button>
+        <button class="slicer notpri" data-slicer="NOT PRIORITY" onclick="applySlicer('NOT PRIORITY',this)">NOT PRIORITY <span class="slicer-count" id="slicerNotPri">0</span></button>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card total">
+          <div class="kpi-icon total"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="kpi-label">Total Customers</div>
+          <div class="kpi-value" id="kpiTotal">0</div>
+        </div>
+        <div class="kpi-card urgent">
+          <div class="kpi-icon urgent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></div>
+          <div class="kpi-label">URGENT</div>
+          <div class="kpi-value" id="kpiUrgent">0</div>
+          <div class="kpi-sub">Immediate action needed</div>
+        </div>
+        <div class="kpi-card week">
+          <div class="kpi-icon week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="kpi-label">Within a Week</div>
+          <div class="kpi-value" id="kpiWeek">0</div>
+        </div>
+        <div class="kpi-card days">
+          <div class="kpi-icon days"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/></svg></div>
+          <div class="kpi-label">Within 2-4 Days</div>
+          <div class="kpi-value" id="kpiDays">0</div>
+        </div>
+        <div class="kpi-card bargain">
+          <div class="kpi-icon bargain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="kpi-label">Bargain Customers</div>
+          <div class="kpi-value" id="kpiBargain">0</div>
+        </div>
+        <div class="kpi-card completed">
+          <div class="kpi-icon completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="kpi-label">Completed Sales</div>
+          <div class="kpi-value" id="kpiCompleted">0</div>
+        </div>
+        <div class="kpi-card notpri">
+          <div class="kpi-icon notpri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          <div class="kpi-label">Not Priority</div>
+          <div class="kpi-value" id="kpiNotPri">0</div>
+        </div>
+        <div class="kpi-card gold">
+          <div class="kpi-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="kpi-label">Gold Customers</div>
+          <div class="kpi-value" id="kpiGold">0</div>
+        </div>
+        <div class="kpi-card silver">
+          <div class="kpi-icon silver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg></div>
+          <div class="kpi-label">Silver Customers</div>
+          <div class="kpi-value" id="kpiSilver">0</div>
+        </div>
+      </div>
+
+      <!-- SEARCH & FILTERS -->
+      <div class="search-filter-bar">
+        <div class="search-row">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="globalSearch" placeholder="Search customer, mobile, product, design..." oninput="applyAllFilters()">
+          </div>
+          <div class="filter-group">
+            <select class="filter-select" id="filterBranch" onchange="applyAllFilters()"><option value="ALL">All Branches</option></select>
+            <select class="filter-select" id="filterMetal" onchange="applyAllFilters()">
+              <option value="ALL">All Metal</option>
+              <option value="GOLD">Gold</option>
+              <option value="SILVER">Silver</option>
+            </select>
+            <select class="filter-select" id="filterEmployee" onchange="applyAllFilters()"><option value="ALL">All Employees</option></select>
+            <select class="filter-select" id="filterSource" onchange="applyAllFilters()"><option value="ALL">All Sources</option></select>
+            <select class="filter-select" id="filterSaleStatus" onchange="applyAllFilters()">
+              <option value="ALL">All Sale Status</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="CUSTOMER DIDN'T PURCHASE">Didn't Purchase</option>
+              <option value="NA">Pending</option>
+            </select>
+            <button class="filter-btn reset" onclick="resetFilters()">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Customers by Branch</h3><div class="chart-container"><canvas id="chartBranch"></canvas></div></div>
+        <div class="chart-card"><h3>Priority Distribution</h3><div class="chart-container"><canvas id="chartPriority"></canvas></div></div>
+        <div class="chart-card"><h3>Sale Status</h3><div class="chart-container"><canvas id="chartSale"></canvas></div></div>
+        <div class="chart-card"><h3>Source Analysis</h3><div class="chart-container"><canvas id="chartSource"></canvas></div></div>
+        <div class="chart-card"><h3>Gold vs Silver by Branch</h3><div class="chart-container"><canvas id="chartMetal"></canvas></div></div>
+        <div class="chart-card"><h3>Employee-wise Customers</h3><div class="chart-container"><canvas id="chartEmployee"></canvas></div></div>
+      </div>
+
+      <!-- MAIN TABLE -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3 id="tableTitle">All Customers</h3>
+          <div class="table-actions">
+            <span style="font-size:12px;color:var(--text-muted)" id="tableCount">0 customers</span>
+            <button class="export-btn" onclick="exportCSV()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table id="mainTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Priority</th>
+                <th>Customer</th>
+                <th>Mobile</th>
+                <th>Branch</th>
+                <th>Metal</th>
+                <th>Product</th>
+                <th>Design</th>
+                <th>Gram</th>
+                <th>Source</th>
+                <th>Mgmt Approval</th>
+                <th>Sale Status</th>
+                <th>Employee</th>
+                <th>Date</th>
+                <th>Remarks</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="mainTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ACTION PLAN ==================== -->
+    <div class="page-section" id="page-action-plan">
+      <div class="kpi-grid" style="margin-bottom:20px">
+        <div class="kpi-card urgent"><div class="kpi-icon urgent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg></div><div class="kpi-label">Urgent Pending</div><div class="kpi-value" id="actionUrgent">0</div></div>
+        <div class="kpi-card week"><div class="kpi-icon week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg></div><div class="kpi-label">Week Pending</div><div class="kpi-value" id="actionWeek">0</div></div>
+        <div class="kpi-card days"><div class="kpi-icon days"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/></svg></div><div class="kpi-label">2-4 Days Pending</div><div class="kpi-value" id="actionDays">0</div></div>
+        <div class="kpi-card completed"><div class="kpi-icon completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="kpi-label">Priority Completed</div><div class="kpi-value" id="actionCompleted">0</div></div>
+      </div>
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;color:var(--brand-green-dark)">Action Plan - Priority Customers Needing Follow-Up</h3>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">These are customers marked URGENT / WITHIN A WEEK / WITHIN 2-4 DAYS whose sale is NOT yet completed. Call or WhatsApp them now.</p>
+      <div class="followup-cards" id="actionPlanCards"></div>
+    </div>
+
+    <!-- ==================== URGENT ==================== -->
+    <div class="page-section" id="page-urgent">
+      <div class="table-card">
+        <div class="table-header"><h3>URGENT Priority Customers</h3></div>
+        <div class="table-wrapper"><table><thead><tr><th>#</th><th>Customer</th><th>Mobile</th><th>Branch</th><th>Metal</th><th>Product</th><th>Design</th><th>Source</th><th>Sale Status</th><th>Employee</th><th>Actions</th></tr></thead><tbody id="urgentTableBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ==================== WITHIN A WEEK ==================== -->
+    <div class="page-section" id="page-week">
+      <div class="table-card">
+        <div class="table-header"><h3>Within a Week - Priority Customers</h3></div>
+        <div class="table-wrapper"><table><thead><tr><th>#</th><th>Customer</th><th>Mobile</th><th>Branch</th><th>Metal</th><th>Product</th><th>Design</th><th>Source</th><th>Sale Status</th><th>Employee</th><th>Actions</th></tr></thead><tbody id="weekTableBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ==================== WITHIN 2-4 DAYS ==================== -->
+    <div class="page-section" id="page-days">
+      <div class="table-card">
+        <div class="table-header"><h3>Within 2-4 Days - Priority Customers</h3></div>
+        <div class="table-wrapper"><table><thead><tr><th>#</th><th>Customer</th><th>Mobile</th><th>Branch</th><th>Metal</th><th>Product</th><th>Design</th><th>Source</th><th>Sale Status</th><th>Employee</th><th>Actions</th></tr></thead><tbody id="daysTableBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ==================== BARGAIN CUSTOMERS ==================== -->
+    <div class="page-section" id="page-bargain">
+      <div class="table-card">
+        <div class="table-header"><h3>Bargain Customers</h3></div>
+        <div class="table-wrapper"><table><thead><tr><th>#</th><th>Customer</th><th>Mobile</th><th>Branch</th><th>Metal</th><th>Product</th><th>Design</th><th>Source</th><th>Sale Status</th><th>Employee</th><th>Remarks</th><th>Actions</th></tr></thead><tbody id="bargainTableBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ==================== NOT PRIORITY ==================== -->
+    <div class="page-section" id="page-not-priority">
+      <div class="table-card">
+        <div class="table-header"><h3>Not Priority Customers</h3></div>
+        <div class="table-wrapper"><table><thead><tr><th>#</th><th>Customer</th><th>Mobile</th><th>Branch</th><th>Metal</th><th>Product</th><th>Design</th><th>Source</th><th>Sale Status</th><th>Employee</th><th>Actions</th></tr></thead><tbody id="notPriTableBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ==================== COMPLETED ==================== -->
+    <div class="page-section" id="page-completed">
+      <div class="table-card">
+        <div class="table-header"><h3>Completed Sales</h3></div>
+        <div class="table-wrapper"><table><thead><tr><th>#</th><th>Customer</th><th>Mobile</th><th>Branch</th><th>Metal</th><th>Product</th><th>Design</th><th>Priority</th><th>Employee</th><th>Date</th></tr></thead><tbody id="completedTableBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ==================== ALL CUSTOMERS ==================== -->
+    <div class="page-section" id="page-all-customers">
+      <div class="table-card">
+        <div class="table-header"><h3>All Return Customers</h3></div>
+        <div class="table-wrapper"><table><thead><tr><th>#</th><th>Priority</th><th>Customer</th><th>Mobile</th><th>Branch</th><th>Metal</th><th>Counter</th><th>Product</th><th>Design</th><th>Gram</th><th>Source</th><th>Mgmt</th><th>Sale</th><th>Employee</th><th>Date</th><th>Remarks</th></tr></thead><tbody id="allTableBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ==================== FOLLOW-UP TRACKING ==================== -->
+    <div class="page-section" id="page-followup">
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Follow-Ups by Mode</h3><div class="chart-container"><canvas id="fuModeChart"></canvas></div></div>
+        <div class="chart-card"><h3>Follow-Up Status</h3><div class="chart-container"><canvas id="fuStatusChart"></canvas></div></div>
+        <div class="chart-card"><h3>Branch Follow-Up Completion</h3><div class="chart-container"><canvas id="fuBranchChart"></canvas></div></div>
+        <div class="chart-card"><h3>Employee Follow-Up Count</h3><div class="chart-container"><canvas id="fuEmpChart"></canvas></div></div>
+      </div>
+      <div class="table-card" style="margin-top:20px">
+        <div class="table-header"><h3>Branch-wise Follow-Up Database (Employee Performance)</h3></div>
+        <div class="table-wrapper"><table>
+          <thead><tr><th>Branch</th><th>Employee</th><th>Total Customers</th><th>Followed - Phone</th><th>Followed - WhatsApp</th><th>Not Followed</th><th>Follow-Up %</th></tr></thead>
+          <tbody id="fuTableBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ==================== REPORTS ==================== -->
+    <div class="page-section" id="page-reports">
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Priority Distribution</h3><div class="chart-container"><canvas id="rptPriority"></canvas></div></div>
+        <div class="chart-card"><h3>Sale Status Breakdown</h3><div class="chart-container"><canvas id="rptSale"></canvas></div></div>
+        <div class="chart-card"><h3>Branch-wise Customers</h3><div class="chart-container"><canvas id="rptBranch"></canvas></div></div>
+        <div class="chart-card"><h3>Source Analysis</h3><div class="chart-container"><canvas id="rptSource"></canvas></div></div>
+        <div class="chart-card full"><h3>Employee-wise Customer Count</h3><div class="chart-container tall"><canvas id="rptEmp"></canvas></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL: CUSTOMER DETAIL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Customer Details</h3>
+      <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('detailModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+const RAW_DATA = [["PDY", "2026-01-08", "Meenatchi", "SILVER", "STERLING", "Kappu Swami", "9626661559", "Chain", "", "Fancy model design", "", "", "NOT PRIORITY", "chain", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-01-08", "Sathish", "SILVER", "KAPPU", "Subhashini", "7390635026", "Mcpayal", "10.5", "Fancy model", "", "", "NOT PRIORITY", "mc payal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-01-08", "Murugan", "SILVER", "STERLING", "Gayathri", "6382427334", "Ord pattadai", "10.5", "Kushbu", "245", "", "WITHIN A WEEK", "pattdai", "DONE", "STOCK IN HAND", "APPROVED", "YES", "", "YES", "COMPLETED"], ["PDY", "2026-01-08", "Nagarani", "GOLD", "LM/NECKLACE", "Saravanan", "9092762576", "Necklace", "", "Antique necklace", "23.380 gms", "", "BARGAIN CUSTOMER", "Antique necklace", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-01-08", "Mangai", "GOLD", "BANGLE", "Rohini", "8489887541", "Bangles", "2.8", "Fancy bombay bangle", "16.120 gms", "", "NOT PRIORITY", "Fancy bombay bangle", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-01-08", "T.Rajalakshmi", "GOLD", "BRACELET", "Josephine", "9819176171", "Dollar", "", "Design eng dollar", "8.200 gms", "", "BARGAIN CUSTOMER", "Design eng dollar", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-01-08", "Mangai", "GOLD", "BANGLE", "Vanaja", "9487525899", "Bangles", "2.2", "Bombay fancy bangle", "16 gms", "", "NOT PRIORITY", "Bombay fancy bangle", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "NA", "NA", "NA"], ["PDY", "2026-02-08", "Sakthivel", "GOLD", "CHAIN", "Vetri", "9157353312", "Chain", "18 inches", "Ipl dou des fancy chain", "8.210 gms", "", "BARGAIN CUSTOMER", "Ipl dou des fancy chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-02-08", "Sakthivel", "GOLD", "CHAIN", "Geetha", "9843185136", "Chain", "24 inches", "Eye lot fancy chain", "19.980 gms", "", "NOT PRIORITY", "Eye lot fancy chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-02-08", "Sakthivel", "GOLD", "CHAIN", "Murugan", "9626372385", "Drc", "24 inches", "Double row pinnal saradu", "24 gms", "", "NOT PRIORITY", "Double row pinnal saradu", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "NA", "NA", "NA"], ["PDY", "2026-02-08", "Jayaselvi", "GOLD", "STUD", "Manimaran", "9095465414", "Stud drops", "", "But d cbe drops, vpm set jimiki", "2 gms", "", "NOT PRIORITY", "But d cbe drops, vpm set jimiki", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-08", "Selvam", "SILVER", "THAGADU ITEM", "Manikandan", "8754972380", "Getty kappu", "5.5", "Getty", "16.9", "", "NOT PRIORITY", "Getty", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-08", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Jagatheeswaran", "7604979981", "Ord pattadai", "10.5", "Kushubu", "194", "", "BARGAIN CUSTOMER", "Kushubu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-08", "Sujatha", "SILVER", "KUTHUVILAKKU", "Manikandan", "8124042620", "Kamatchi Amman vilaku", "", "", "122.1", "", "NOT PRIORITY", "kamatchi amman vilakku", "DONE", "STOCK IN HAND", "APPROVED", "YES", "", "YES", "COMPLETED"], ["PDY", "2026-03-08", "Meenatchi", "SILVER", "STERLING", "Senthil Kumar", "9994412263", "Murugan vigraham", "", "Antique", "92", "", "NOT PRIORITY", "Antique", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-08", "Tharani", "SILVER", "MC PAYAL", "Vijaya shree", "7358892887", "Mcpayal", "", "", "", "", "NOT PRIORITY", "MC PAYAL", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-08", "Sathish", "SILVER", "KAPPU", "Anitha", "6382621905", "Kappu", "1.8", "Getty kappu", "", "", "NOT PRIORITY", "Getty kappu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-08", "Murugan", "SILVER", "STERLING", "Kamalam", "8098514195", "Zilara necklace", "", "Fancy model", "", "", "WITHIN A WEEK", "Fancy model", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-08", "Mangai", "GOLD", "BANGLE", "Arouna", "6192067820", "Bangle", "2.6", "MC bangle", "24 gms", "", "NOT PRIORITY", "MC bangle", "DONE", "NA", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-08", "T.Rajalakskmi", "GOLD", "BRACELET", "Subhashini", "8111000593", "Bracelet", "6.5 inches", "Hanging type bl", "6 gms", "", "NOT PRIORITY", "Hanging type bl", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-08", "Sakthivel", "GOLD", "CHAIN", "Eswari", "9597728757", "Thali saradu", "24 inches", "Remo MC thali saradu", "40.190 gms", "", "NOT PRIORITY", "Remo MC thali saradu", "DONE", "NA", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-08", "Kay9", "GOLD", "STUD", "Bakkiyalakshmi", "9384968394", "Bit mattal", "", "Titanic bit mattal", "1.010 gms", "", "BARGAIN CUSTOMER", "Titanic bit mattal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-04-08", "Selvam", "SILVER", "THAGADU ITEM", "Kamalasekaran", "9360511166", "Silver vel", "4 inches", "", "24", "", "NOT PRIORITY", "Silver vel", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-04-08", "Selvam", "SILVER", "THAGADU ITEM", "Abinaya", "6361230290", "Nei Doobakkal", "", "", "71.9", "", "NOT PRIORITY", "Nei Doobakkal", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "PENDING", "NA"], ["PDY", "2026-04-08", "Samundeeswari", "SILVER", "STERLING", "Arun", "9940986944", "Lucky stone Ring", "", "Maragatha pachai", "", "", "NOT PRIORITY", "Lucky stone Ring", "DONE", "NEW ORDER", "", "", "NA", "NA", "NA"], ["PDY", "2026-04-08", "Karthiga", "GOLD", "STUD", "Suguna", "9345486353", "Stud drops", "", "Any new collection", "2 gms", "", "NOT PRIORITY", "Stud drops", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "2026-05-08", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Nalini", "6380816149", "Kappu", "2.12", "U kada", "28", "", "NOT PRIORITY", "kada", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-05-08", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Santhose", "8667066836", "Ord pattadai", "6", "Salangai", "74", "", "NOT PRIORITY", "ord pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-05-08", "Tharani", "SILVER", "MC PAYAL", "Shankar", "8072459149", "Ord pattadai", "9.5", "Kushbu", "104.2", "", "NOT PRIORITY", "ORD PATTADAI", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-05-08", "Sujatha", "SILVER", "KUTHUVILAKKU", "Jenani", "9043427499", "Kuthuvilakku", "24 inches", "Plain", "2 kg", "", "WITHIN A WEEK", "KUTHU VILAKKU", "DONE", "NEW ORDER", "NA", "PENDING", "NA", "NA", "NA"], ["PDY", "2026-05-08", "11250", "GOLD", "RING", "Anandhi", "7358825532", "Ring", "12", "Gents ring", "1 gm", "", "NOT PRIORITY", "Ring", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "2026-05-08", "Murugan", "SILVER", "STERLING", "Dinesh", "6385335608", "Ord pattadai", "10.5", "Getty pattadai", "155.8", "", "NOT PRIORITY", "Ord pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-05-08", "Mangai", "GOLD", "BANGLE", "Madhina", "9025928474", "Bangles", "2.1", "Any design", "12 gms-pair", "", "NOT PRIORITY", "Bangles", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "NA", "NA", "NA"], ["PDY", "2026-05-08", "Karthiga", "GOLD", "STUD", "Sathya", "7639823654", "Stud drops", "", "Vishaha jimiky", "8 gms", "", "NOT PRIORITY, WITHIN 2 - 4 DAYS", "Stud drops", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "2026-05-08", "Poorani", "GOLD", "BRACELET", "Manikandan", "9894797557", "Bracelet", "8 inches", "Delhi stamp bl", "8.020 gms", "", "NOT PRIORITY", "Bracelet", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-05-08", "Sujatha", "SILVER", "STERLING", "Kaviyarasi", "8870330554", "Stud", "", "", "", "", "NOT PRIORITY", "Stud", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-05-08", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Radha", "7305823444", "Mcpayal", "9.5", "Screw payal", "43.3", "", "WITHIN A WEEK", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-08", "Selvam", "SILVER", "THAGADU ITEM", "Velani", "8508690619", "Mcpayal", "11.5", "Screw payal", "70", "", "NOT PRIORITY", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-08", "Sujatha", "SILVER", "KUTHUVILAKKU", "", "", "Silver coin", "", "", "10 gram", "", "NOT PRIORITY", "Silver coin", "DONE", "NEW ORDER", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-08", "Selvam", "SILVER", "THAGADU ITEM", "Vennila", "9442657845", "Ord pattadai", "9.5", "Kushubu", "153", "", "NOT PRIORITY", "Ord pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-08", "Meenatchi", "SILVER", "STERLING", "Subasree", "9585054876", "kappu", "2.4", "Vel kada", "26", "", "NOT PRIORITY", "kappu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-08", "Umadevi", "GOLD", "STUD", "Tharani", "9498082136", "Stud", "", "Stud", "1 gm", "", "NOT PRIORITY", "Stud", "DONE", "NA", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-08", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Yugathi", "8903475953", "Mcpayal", "10.5", "Screw payal", "", "", "NOT PRIORITY", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-07-08", "Sujatha", "SILVER", "KUTHUVILAKKU", "Arun", "8072692997", "Kappu", "3", "Vel God kada", "43.5", "", "NOT PRIORITY", "Kappu", "DONE", "STOCK IN HAND", "APPROVED", "YES", "", "YES", "COMPLETED"], ["PDY", "2026-07-08", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Latha", "9543237638", "Silver Amman mugam", "", "", "", "", "NOT PRIORITY", "Silver Amman mugam", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-07-08", "Umadevi", "GOLD", "STUD", "Shalini", "8015417342", "Stud drops", "", "Any new collection", "4 gms", "", "NOT PRIORITY", "Stud drops", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-07-08", "Dharmabalan", "GOLD", "LM/NECKLACE", "Shammou", "8637490938", "Set lm,necklace,drops", "", "Calcutta design lm, necklace", "80 gms", "", "NOT PRIORITY", "Set lm,necklace,drops", "DONE", "NA", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-07-08", "Sakthivel", "GOLD", "CHAIN", "Bharathi", "9361834318", "Chain", "18 inches", "Dp hand made chain", "8.030 gms", "", "NOT PRIORITY", "Chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-08-08", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Mythili", "9443126604", "Ideal manakula Vinayagar statue", "", "", "", "", "NOT PRIORITY", "Ideal manakula Vinayagar statue", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-08-08", "911212", "GOLD", "STUD", "B.sharma", "9894671501", "Earrings", "", "Fancy model", "2 gms", "", "NOT PRIORITY", "Earrings", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-08-08", "91270", "GOLD", "CHAIN", "Viji", "9894986531", "Chain", "18 inches", "Lotus fancy chain", "12.11", "", "NOT PRIORITY", "Lotus fancy chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-08-08", "11507", "GOLD", "LM/NECKLACE", "Abhirami", "9843821713", "Necklace", "", "Man cbe necklace", "12.67", "", "WITHIN A WEEK", "cbe necklace", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-08-08", "11507", "GOLD", "LM/NECKLACE", "Maheshwaran", "9003344841", "Necklace", "", "Fancy model", "12 gms", "", "NOT PRIORITY", "Necklace", "DONE", "NEW ORDER", "", "PENDING", "NA", "NA", "NA"], ["PDY", "2026-08-08", "911212", "GOLD", "STUD", "Jeevi", "8531021215", "Stud", "", "", "2 gms", "", "WITHIN 2 - 4 DAYS", "Earrings", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-08-08", "Tharani", "SILVER", "MC PAYAL", "Amutha", "6382062962", "Bangle", "1.8", "Cutting bangle", "13.2", "", "NOT PRIORITY", "Bangle", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-09-08", "Meenatchi", "SILVER", "STERLING", "Vasanthi", "9159676305", "Silver Bangle", "2.4", "92.5 cutting bangle", "18.1", "", "NOT PRIORITY", "Bangle", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-09-08", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Vinitha", "9677327719", "Ord pattadai", "8.5", "Arumbu double pattadai", "", "", "NOT PRIORITY", "Ord pattadai", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-09-08", "Dhanalakshmi", "SILVER", "CHIT", "Selvaraj", "9787001902", "PGL 4821", "", "", "", "", "NOT PRIORITY", "", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "2026-09-08", "Sujatha", "SILVER", "KUTHUVILAKKU", "Akkilan", "9944009422", "Silver Bar", "", "", "50g", "", "NOT PRIORITY", "Silver BAR", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-09-08", "Sujatha", "SILVER", "KUTHUVILAKKU", "Kurunathan", "9790423035", "Silver Bangle", "1.8", "", "", "", "NOT PRIORITY", "Baby bangle", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-09-08", "Sakthivel", "GOLD", "CHAIN", "Manonmani", "9361013392", "Chain hook", "", "Spl hook", "0.510 gms", "", "NOT PRIORITY", "hook", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-09-08", "Sakthivel", "GOLD", "CHAIN", "Jayapriya", "7824991977", "Thali saradu", "24 inches", "Krp mc thali saradu", "16.050 gms", "", "NOT PRIORITY", "thali saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-09-08", "Jaya", "GOLD", "MOOKUTHI", "Hemalatha", "9920115578", "Koppu", "", "Koppu", "", "", "NOT PRIORITY", "Koppu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-09-08", "Sujatha", "SILVER", "KUTHUVILAKKU", "Kavitha", "9952685553", "Silver plate", "", "Pooja plate", "", "", "NOT PRIORITY", "silver plate", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-10-08", "Tharani", "SILVER", "MC PAYAL", "Sathiya", "7373736226", "Mcpayal", "10.5", "Fancy", "29.8", "", "NOT PRIORITY", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-10-08", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Nanthini", "9677631426", "Metty", "", "Plain", "", "", "NOT PRIORITY", "Metty", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-10-08", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Roja", "9025602516", "Silver Hip chain", "", "", "", "", "NOT PRIORITY", "Silver Hip chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-10-08", "Sakthivel", "GOLD", "CHAIN", "Karunamooethy", "9790579988", "Saradu", "24 inches", "Spiral mc thalli saradu", "40.040 gms", "", "NOT PRIORITY", "Saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-10-08", "Chira", "SILVER", "KAMATCHI AMMAN VILAKKU", "Murugaiyan", "9626909901", "Mc kajal", "46", "", "65.3", "", "NOT PRIORITY", "Mc kajal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-10-08", "Nagarani", "GOLD", "LM/NECKLACE", "Vijayakumar", "9629878981", "Long malai, necklace", "", "Any set lm and necklace", "56 gms", "", "NOT PRIORITY", "Long malai, necklace", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "2026-10-08", "Meenatchi", "SILVER", "STERLING", "Valli", "8124459941", "Silver Bangle", "", "", "", "", "NOT PRIORITY", "Silver Bangle", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-11-08", "Sujatha", "SILVER", "KUTHUVILAKKU", "Gobika", "9344678728", "Silver Bangle", "2.8", "", "", "", "NOT PRIORITY", "Silver Bangle", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-11-08", "Sujatha", "SILVER", "KUTHUVILAKKU", "Affroj", "9677692436", "Silver chain", "20", "92.5 3+1 Src", "11", "", "NOT PRIORITY", "Silver chain", "DONE", "STOCK IN HAND", "APPROVED", "YES", "", "YES", "COMPLETED"], ["PDY", "2026-11-08", "Jayaselvi", "GOLD", "BRACELET", "Selvi", "9787544066", "V hand made kada", "2.12", "V hand made kada", "32.060 gms", "", "NOT PRIORITY", "V hand made kada", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-11-08", "Umadevi", "GOLD", "STUD", "Sowmya", "7358655042", "Vakkuchutty", "", "Any new collection", "8 gms", "", "NOT PRIORITY", "Vakkuchutty", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-11-08", "M.Rajalakshmi", "GOLD", "CHAIN", "Albert", "9894356762", "Thali saradu", "24 inches", "Tk hollow thali saradu", "56.020 gms", "", "BARGAIN CUSTOMER", "Thali saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-11-08", "Dhanlakshmi", "SILVER", "ORD PATTADAI", "Mirudhala", "7708167810", "Mcpayal", "10.5", "Fancy", "60.5", "", "NOT PRIORITY", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-11-08", "Sujata", "SILVER", "MC PAYAL", "Viji", "9345421440", "MC gajal and baby kappu", "24.inch", "", "67gm", "", "NOT PRIORITY", "MC gajal and baby kappu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-12-08", "Samundeeswari", "SILVER", "STERLING", "Sebiraja", "9944236868", "Silver Bracelet", "", "", "", "", "NOT PRIORITY", "Silver Bracelet", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-12-08", "Chithra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Srithar", "9092138836", "Silver Ring", "", "Vel", "", "", "NOT PRIORITY", "Silver Ring", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-12-08", "Selvam", "SILVER", "THAGADU ITEM", "Sawsrani", "8903983058", "Mcpayal", "10.5", "Fancy", "26.2", "", "NOT PRIORITY", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-12-08", "Selvam", "SILVER", "THAGADU ITEM", "Kumar", "9487061887", "Baby plate set", "", "", "168.5", "", "NOT PRIORITY", "Baby plate set", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-12-08", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Gandhimathi", "8682861635", "Vinayagar and murugan vigraham", "", "", "339", "", "NOT PRIORITY", "Vinayagar and murugan vigraham", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-12-08", "M.Rajalakshmi", "GOLD", "CHAIN", "Abirami", "8056903225", "Chain", "18 inches", "R ball chain", "8 gms", "", "WITHIN A WEEK", "Chain", "DONE", "NEW ORDER", "APPROVED", "YES", "NA", "NA", "NA"], ["PDY", "2026-12-08", "Sakthivel", "GOLD", "CHAIN", "Karunanithi", "9487978252", "Thali saradu", "24 inches", "Tk hollow thali saradu", "24 gms", "", "NOT PRIORITY, BARGAIN CUSTOMER", "Thali saradu", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "2026-12-08", "Sakthivel", "GOLD", "CHAIN", "Tamilselvi", "9489789590", "Chain", "18 inches", "Any new collection", "4 to 6 gms", "", "NOT PRIORITY", "Chain", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "2026-12-08", "Tharani", "SILVER", "MC PAYAL", "Aasar", "9626740533", "Mcpayal", "9.5", "Screw payal", "62.6", "", "NOT PRIORITY", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-12-08", "Mangai", "GOLD", "BANGLE", "Raju", "9600214028", "Bangle", "2.8", "Fancy calcutta bangle", "39.870 gms", "", "WITHIN 2 - 4 DAYS", "Bangle", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-12-08", "Sujatha", "SILVER", "KUTHUVILAKKU", "Murugesan", "9943320497", "Silver Kappu", "2.1", "Plain urudu", "", "", "NOT PRIORITY", "Silver Kappu", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "13/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Aishwarya", "9047268906", "Silver antique Metty", "Adjustable", "", "", "", "NOT PRIORITY", "Silver antique Metty", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "13/08/2026", "Murugan", "SILVER", "STERLING", "", "", "Silver Bracelet", "", "", "", "", "NOT PRIORITY", "Silver Bracelet", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "13/08/2026", "Sakthivel", "GOLD", "CHAIN", "Yuvaraj", "9655404850", "Chain", "18 inches", "Bahu fancy chain", "3.960 gms", "", "NOT PRIORITY", "Bahu fancy chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "13/08/2026", "Poorani", "GOLD", "BRACELET", "Sundaramoorthy", "9597966395", "Dollar", "", "Any new collection", "8 gms", "", "NOT PRIORITY", "Any new collection", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "13/08/2026", "T.Rajalakshmi", "GOLD", "BRACELET", "Priyanka", "6380633776", "Bracelet", "5.5 inches", "Nav nawabi bl", "3.070 gms", "", "NOT PRIORITY", "Nav nawabi bl", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "13/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Vijay", "7639959948", "Kappu", "2.12", "U kada", "31.7", "", "NOT PRIORITY", "U kada", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "14/08/2026", "Tharani", "SILVER", "MC PAYAL", "Sithika", "8072951276", "Mcpayal", "", "", "", "", "NOT PRIORITY", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "14/08/2026", "Meenatchi", "SILVER", "STERLING", "Santhi", "9479420326", "Silver stud", "Small", "Stone", "", "", "NOT PRIORITY", "Silver stud", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "14/08/2026", "Sujatha", "SILVER", "KUTHUVILAKKU", "Sreeka", "6385846442", "Silver vigraham", "Small", "", "", "", "NOT PRIORITY", "Silver vigraham", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "14/08/2026", "Nagarani", "GOLD", "LM/NECKLACE", "Rajalakshmi", "8056591956", "Long malai", "", "Maharani lm", "40 gms", "", "NOT PRIORITY", "Maharani lm", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "14/08/2026", "Sakthivel", "GOLD", "CHAIN", "Dhanalakshmi", "9488813644", "Thali saradu", "24 inches", "Sqr hollow thalli saradu", "72.040 gms", "", "BARGAIN CUSTOMER", "Sqr hollow thalli saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "14/08/2026", "Sakthivel", "GOLD", "CHAIN", "Anbu", "9943837790", "Chain", "18 inches", "Any design", "12 gms", "", "NOT PRIORITY", "", "DONE", "NEW ORDER", "APPROVED", "YES", "NA", "NA", "NA"], ["PDY", "14/08/2026", "Mangai", "GOLD", "CHAIN", "Revathi", "8807614781", "Chain", "24 inches", "Dk hand made chain", "16.050 gms", "", "BARGAIN CUSTOMER", "Dk hand made chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "15/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Kathirvel", "9442786366", "Silver kunguma simizh", "", "Plain", "20", "", "NOT PRIORITY", "kunguma simizh", "DONE", "NEW ORDER", "", "NA", "NA", "NA", "NA"], ["PDY", "15/08/2026", "Jayaselvi", "GOLD", "BRACELET", "Aravindhan", "8838493608", "Bracelet", "7.5 inches", "Any design", "24 gms", "", "BARGAIN CUSTOMER", "Any design", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "15/08/2026", "Jayaselvi", "GOLD", "BANGLE", "Selvamani", "6383443488", "Bangles", "2.6", "Banboo bangle", "24 gms", "", "BARGAIN CUSTOMER", "Banboo bangle", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "15/08/2026", "Jayaselvi", "GOLD", "LM/NECKLACE", "Kanimozhi", "9361626881", "Long malai with dollar", "", "Sip hand made lm, bombay dollar", "28.230 gms", "", "NOT PRIORITY", "Sip hand made lm, bombay dollar", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "15/08/2026", "Selvam", "SILVER", "THAGADU ITEM", "Ramaswamy", "9787084769", "Ord pattadai", "9.5", "Kushbu pattadai", "100.5", "", "NOT PRIORITY", "Kushbu pattadai", "DONE", "STOCK IN HAND", "APPROVED", "YES", "NA", "YES", "COMPLETED"], ["PDY", "15/08/2026", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Prabhavathi", "9788252914", "Ord pattadai", "10.5", "Chain type", "75", "", "NOT PRIORITY", "Chain type", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "15/08/2026", "Tharani", "SILVER", "MC PAYAL", "Usha", "9791858858", "Mcpayal", "10.5", "Fancy mcpayal", "37.4", "", "NOT PRIORITY", "Fancy mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "15/08/2026", "Meenatchi", "SILVER", "STERLING", "Hema", "", "Silver stud", "", "Stone", "", "", "NOT PRIORITY", "Stone", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "15/08/2026", "T.Rajalakshmi", "GOLD", "BRACELET", "Pradeep Kumar", "9486367437", "Bracelet", "7.5 inches", "Ten bl", "4 gms", "", "NOT PRIORITY", "Ten bl", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "15/08/2026", "Kayalvizhi", "GOLD", "STUD", "Samundeeswari", "7904010511", "Stud drops", "", "Kothu balls bombay drops", "3.860 gms", "", "NOT PRIORITY", "Kothu balls bombay drops", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "16/08/2026", "Murugan", "SILVER", "STERLING", "", "", "Mcpayal", "10.5", "Screw payal", "66.6", "", "NOT PRIORITY", "Screw payal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "16/08/2026", "Tharani", "SILVER", "MC PAYAL", "Pavithra", "8775505722", "Mcpayal", "10.5", "Koki type", "37.4", "", "NOT PRIORITY", "Koki type", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "16/08/2026", "Chitra", "SILVER", "KUTHUVILAKKU", "Siva shankari", "9994163571", "Ord pattadai", "10.5", "Getty pattadai", "96.7", "", "NOT PRIORITY", "Getty pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "16/08/2026", "Poorani", "GOLD", "BRACELET", "Saraswathi", "9150234713", "Bracelet", "6 inches", "Pl casting bl", "4.090 gms", "", "NOT PRIORITY", "Pl casting bl", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "16/08/2026", "Sujatha", "SILVER", "STERLING", "Uma", "8754513590", "Ord pattadai", "", "", "", "", "NOT PRIORITY", "Ord pattadai", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "16/08/2026", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Rajendran", "8270098487", "Ord pattadai", "9.5", "Kothamalli", "150", "", "NOT PRIORITY", "Kothamalli", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "16/08/2026", "Meenatchi", "SILVER", "STERLING", "Krishna", "9047710684", "Natarajan Dollar", "", "", "", "", "WITHIN A WEEK", "Natarajar god Dollar", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "16/08/2026", "Jayaselvi", "GOLD", "CHAIN", "Mohanraj", "9345453098", "Chain", "18 inches", "Remo tokyo chain", "8.070 gms", "", "NOT PRIORITY", "Remo tokyo chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "16/08/2026", "Chitra", "SILVER", "KUTHUVILAKKU", "Madhavan", "7092041972", "Kamatchi amman vilakku", "Small", "", "42", "", "WITHIN A WEEK", "Kamatchi amman vilakku", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "16/08/2026", "Meenachi", "SILVER", "STERLING", "T. Ramesh", "9943970410", "Pooja set", "", "Normal design", "463.1", "", "WITHIN 2 - 4 DAYS", "Normal design", "DONE", "STOCK IN HAND", "APPROVED", "YES", "", "YES", "COMPLETED"], ["PDY", "17/08/2026", "Meenakshi", "SILVER", "STERLING", "Hemavathine", "9894719136", "Ladies chain", "18inch", "Fancy model", "3.3", "", "NOT PRIORITY", "Fancy model", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "17/08/2026", "Sujatha", "SILVER", "KUTHUVILAKKU", "Aarthi", "9655665427", "Antique Metty", "", "Plain", "3gm", "", "NOT PRIORITY", "Plain", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "17/08/2026", "Sakthivel", "GOLD", "CHAIN", "Dhandapani", "9788574525", "Chain", "18 inches", "Sundari chain", "8 gms", "", "NOT PRIORITY", "Sundari chain", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "17/08/2026", "Jayaselvi", "GOLD", "CHAIN", "Susila", "9487062103", "Chain", "24 inches", "Ball basha cbechain", "40 gms", "", "NOT PRIORITY", "Ball basha cbechain", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "17/08/2026", "Mangai", "GOLD", "BANGLE", "Ajeeth kumar", "7094896288", "Bangle", "2.6", "Fancy bombay bangle", "24.160 gms", "", "BARGAIN CUSTOMER", "Fancy bombay bangle", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "17/08/2026", "Mangai", "GOLD", "BANGLE", "Sathish", "9443830107", "Bangle", "2.6", "Screw kerala bangle", "21.540 gms", "", "WITHIN A WEEK", "Screw kerala bangle", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "18/08/2026", "M.Rajalakahmi", "GOLD", "CHAIN", "Sivakumar", "9843783907", "Thali saradu", "24 inches", "Sqr hollow thali saradu", "40.030 gms", "", "WITHIN 2 - 4 DAYS", "Sqr hollow thali saradu", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "18/08/2026", "M.Rajalakshmi", "GOLD", "CHAIN", "M.lakahmi", "8608574942", "Chain", "18 inches", "Ten hand made chain", "24.100 gma", "", "WITHIN 2 - 4 DAYS", "Ten hand made chain", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "18/08/2026", "Meenatchi", "SILVER", "STERLING", "Kamala devi", "9443459441", "German silver frame", "9 inches", "", "", "", "NOT PRIORITY", "german silver", "DONE", "NEW ORDER", "", "PENDING", "NA", "NA", "NA"], ["PDY", "18/08/2026", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Mirudhala", "7708167810", "Mcpayal", "10.5", "Chain type", "60.5", "", "NOT PRIORITY", "ord pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "18/08/2026", "Sujatha", "SILVER", "KUTHUVILAKKU", "Malathi", "7845318450", "Hip chain", "", "", "", "", "NOT PRIORITY", "hip chain", "DONE", "NEW ORDER", "NA", "NA", "NA", "NA", "NA"], ["PDY", "18/08/2026", "91270", "GOLD", "BANGLE", "Abarna", "9894808639", "Baby kada", "1.12", "Bamboo bangle", "8.7", "", "WITHIN 2 - 4 DAYS", "Bamboo bangle", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "18/08/2026", "Meenatchi", "SILVER", "STERLING", "Senthil Kumar", "8903617881", "Kappu", "2.8", "V kada", "", "", "WITHIN A WEEK", "v kada", "DONE", "NEW ORDER", "NA", "NA", "NA", "NA", "NA"], ["PDY", "18/08/2026", "Selvam", "SILVER", "THAGADU ITEM", "Gomathi", "9500392856", "Silver Kappu", "", "", "", "", "NOT PRIORITY", "kada", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "18/08/2026", "Sujatha", "SILVER", "KUTHUVILAKKU", "Tamil Selvam", "9697563302", "Kamatchi amman vilakku", "", "", "70", "", "NOT PRIORITY", "K A V", "DONE", "NEW ORDER", "", "NA", "NA", "NA", "NA"], ["PDY", "18/08/2026", "Murugan", "SILVER", "STERLING", "", "", "Silver Metty", "", "Plain", "", "", "NOT PRIORITY", "METTY", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "18/08/2026", "Selvam", "SILVER", "THAGADU ITEM", "Guru", "7373733395", "Kappu", "2.6", "Vel", "41 gram", "", "NOT PRIORITY", "KADA", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "18/08/2026", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Ramalingam", "8754840279", "Mcpayal", "", "Antique payal", "", "", "NOT PRIORITY", "ANTIQ KOLUSU", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "19/08/2026", "Murugan", "SILVER", "STERLING", "Guru", "9944810103", "Kappu", "Baby", "Black mani", "", "", "NOT PRIORITY", "Black mani", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "19/08/2026", "Umadevi", "GOLD", "STUD", "Mohamed farook", "6380769838", "Stud drops", "", "Full heart without chain", "4gms", "", "URGENT", "Full heart without chain", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "19/08/2026", "Mangai", "GOLD", "BANGLE", "Agila", "9677382258", "Bangles", "2.8", "DI DULFANCY BANGLE", "16.070 gms", "", "BARGAIN CUSTOMER", "DI DULFANCY BANGLE", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "19/08/2026", "Tharani", "SILVER", "MC PAYAL", "Karpagam", "9150971902", "Ord pattadai", "10", "Kushbu pattadai", "83.7", "", "NOT PRIORITY", "Kushbu pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "19/08/2026", "Sakthivel", "GOLD", "CHAIN", "Ranjith", "7373598608", "Chain", "24 inches", "SQR REMO HOLLOW THALI SARADU", "28.070 gms", "", "WITHIN A WEEK", "SQR REMO HOLLOW THALI SARADU", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "19/08/2026", "Dharmabalan", "GOLD", "LM/NECKLACE", "Giridharan", "9092086346", "Lm, necklace", "", "ARUM CBE LM, NECKLACE", "40.920 gms", "", "NOT PRIORITY", "ARUM CBE LM, NECKLACE", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "19/08/2026", "Jayaselvi", "GOLD", "CHAIN", "Iliyaas", "7094641556", "Chain (final 6%) rangaraj", "18 inches", "Del mc chain", "8 gms", "", "BARGAIN CUSTOMER", "Del mc chain", "DONE", "", "", "", "NA", "NOT AVAILABLE", "CUSTOMER DIDN'T PURCHASE"], ["PDY", "20/08/2026", "Tharani", "SILVER", "MC PAYAL", "Iyyappa murthy", "8682022797", "Ord pattadai", "10", "Kushubu", "139.9", "", "NOT PRIORITY", "Ord pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "20/08/2026", "91196", "GOLD", "RING", "Lalitha", "7397082916", "Ring", "22", "Ladies ring", "2", "", "NOT PRIORITY", "Ring", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "20/08/2026", "Jayaselvi", "GOLD", "THALI", "Sathya", "8608654350", "Coin", "", "K.coin", "2 gms", "", "BARGAIN CUSTOMER", "Coin", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "20/08/2026", "Murugan", "SILVER", "STERLING", "Balachandran", "8778948744", "Kuthuvilakku", "", "Fancy", "193", "", "WITHIN A WEEK", "Kuthuvilakku", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "20/08/2026", "Murugan", "SILVER", "KAPPU", "", "", "Kappu", "", "Online design", "", "", "NOT PRIORITY", "Kappu", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "21/08/2026", "Sakthivel", "GOLD", "CHAIN", "Revathi", "9629864272", "Thali saradu", "24 inches", "Tk hollow thali saradu", "24.050 gms", "", "BARGAIN CUSTOMER", "Tk hollow thali saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "21/08/2026", "Sakthivel", "GOLD", "CHAIN", "Hemavathi", "9994310628", "Chain", "18 inches", "Any new collection", "4 gms", "", "NOT PRIORITY", "Any new collection", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "21/08/2026", "Sakthivel", "GOLD", "CHAIN", "Radhakrishnan", "9380869894", "Thali saradu", "24 inches", "KRP SUN MC THALI SARADU", "40.020 gms", "", "BARGAIN CUSTOMER", "KRP SUN MC THALI SARADU", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "21/08/2026", "Jaya", "GOLD", "MOOKUTHI", "Kaliyaperumal", "9363249524", "Nosebin", "", "Valayam", "", "", "NOT PRIORITY", "Valayam", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "NA", "NOT AVAILABLE", "CUSTOMER DIDN'T PURCHASE"], ["PDY", "21/08/2026", "Murugan", "SILVER", "STERLING", "", "", "Silver vigragam", "", "", "128.7", "", "BARGAIN CUSTOMER", "Silver vigragam", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "22/08/2026", "Meenakshi", "SILVER", "STERLING", "Mukilam", "9600631924", "I m genesis chain", "20 inches", "Important", "30 gm", "", "NOT PRIORITY", "IM CHAIN", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "22/08/2026", "91113", "SILVER", "MC PAYAL", "Jayashank", "9500684508", "Mc payal", "10.3", "", "", "", "NOT PRIORITY", "MC PAYAL", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "23/08/2026", "Ilangium", "GOLD", "BANGLE", "Ayyanar", "9629559978", "Bangle", "2.1", "Pibe bangles", "16 gms", "", "NOT PRIORITY", "18gm varai sayalam", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "NA", "NA", "NA"], ["PDY", "23/08/2026", "Nagarani", "GOLD", "LM/NECKLACE", "Jothibas", "9500659750", "Lm, necklace", "", "Maharani lm necklace", "45.390 gms", "", "NOT PRIORITY", "Maharani lm necklace", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "23/08/2026", "Dhanalakshmi", "SILVER", "MC PAYAL", "Shankar", "7598500451", "Mcpayal", "10.5", "Koki type", "32 gram", "", "NOT PRIORITY", "Koki type", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "23/08/2026", "Selvam", "SILVER", "ORD PATTADAI", "Raja Ram", "9894704362", "Ord pattadai", "6", "Salangai type", "76", "", "NOT PRIORITY", "Salangai type", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "23/08/2026", "Selvam", "SILVER", "THAGADU ITEM", "Raj", "8098921199", "Silver plate", "", "Round plate", "248.7", "", "NOT PRIORITY", "Round plate", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "23/08/2026", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Pachaiyammal", "9043365203", "Mcpayal", "10.5", "Koki type", "23gram", "", "NOT PRIORITY", "Koki type", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "23/08/2026", "Murugan", "SILVER", "STERLING", "Saran", "8838589483", "Silver Bracelet", "5", "3+1", "8", "", "NOT PRIORITY", "3+1", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "23/08/2026", "Samundeeswari", "SILVER", "THAGADU ITEM", "Mukesh", "9087611029", "Silver vathi stand", "Small", "", "12", "", "NOT PRIORITY", "Silver vathi stand", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "23/08/2026", "91196", "GOLD", "RING", "Ranjithr", "9944201038", "Ring", "15", "Casting ring", "1.2gm", "", "NOT PRIORITY", "Casting ring", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "24/08/2026", "Sakthivel", "GOLD", "CHAIN", "Moorthy", "9677118440", "Thali saradu", "24 inches", "Vel peac casting saradu", "40.240 gms", "", "BARGAIN CUSTOMER", "Vel peac casting saradu", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "24/08/2026", "Karthiga", "GOLD", "STUD", "Gayathri", "9600824300", "Stone drops", "", "Ruby stone drops", "3 to 4 gms", "", "NOT PRIORITY", "Ruby stone drops", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "24/08/2026", "Nagarani", "GOLD", "LM/NECKLACE", "கோதண்டபாணி", "9791564181", "Back chain", "", "Bc", "2.370 gms", "", "BARGAIN CUSTOMER", "Bc", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "24/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Baskar", "7708290218", "Silver komatha vigraham", "", "Getty type", "250", "", "WITHIN A WEEK", "Getty type", "DONE", "NEW ORDER", "", "PENDING", "NA", "NA", "NA"], ["PDY", "24/08/2026", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Latha", "9003460398", "Ord pattadai", "10.5", "One line salangai", "163", "", "NOT PRIORITY", "One line salangai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "24/08/2026", "Tharani", "SILVER", "MC PAYAL", "Gopi", "6382007344", "Pl Boul kappu", "6", "", "31.5", "", "NOT PRIORITY", "Pl Boul kappu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "24/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Vanitha", "9597941819", "Silver Agal vilakku", "", "Six face agal mugam vilakku", "", "", "NOT PRIORITY", "Six face agal mugam vilakku", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "24/08/2026", "Tharani", "SILVER", "MC PAYAL", "Vadivelu", "9843179849", "Mcpayal", "10.5", "Balls type", "", "", "NOT PRIORITY", "Balls type", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "24/08/2026", "M.Rajalakshmi", "GOLD", "CHAIN", "Malathy", "7639958551", "Chain", "24 inches", "Anjali hand made chain", "40.140 gms", "", "NOT PRIORITY", "Anjali hand made chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "24/08/2026", "M.Rajalakshmi", "GOLD", "CHAIN", "Vijay", "9962762920", "Thali saradu", "24 inches", "Spiral casting saradu", "32.220 gms", "", "BARGAIN CUSTOMER", "Spiral casting saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "25/08/2026", "Meenatchi", "SILVER", "STERLING", "Vanitha", "9843315121", "Silver Metty", "Adjustable", "", "5.3", "", "NOT PRIORITY", "METTY", "DONE", "NA", "NA", "NA", "NA", "NA", "NA"], ["PDY", "25/08/2026", "Meenatchi", "SILVER", "STERLING", "Priya", "9994391162", "Silver Bangle", "Baby Size", "Plain design", "15.3", "", "BARGAIN CUSTOMER", "BANGLE", "DONE", "NA", "NA", "NA", "NA", "NA", "NA"], ["PDY", "25/08/2026", "Kayalvizhi", "GOLD", "STUD", "Usha", "8603385758", "Stud drops", "", "Rope drops", "4 gms", "", "NOT PRIORITY", "Rope drops", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "25/08/2026", "Karthiga", "GOLD", "STUD", "Santhanalakshmi", "6383234728", "Stone mattal", "", "Simple design stone mattal", "4 gms", "", "NOT PRIORITY", "sample photo erukka", "DONE", "NA", "NA", "NA", "NA", "NA", "NA"], ["PDY", "25/08/2026", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Deepa", "9443434040", "Ord pattadai", "", "", "", "", "NOT PRIORITY", "ORD PATTADAI", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "25/08/2026", "Tharani", "SILVER", "MC PAYAL", "Susai mary", "7845564049", "Ord pattadai", "New born baby", "Chain jalldra", "", "", "NOT PRIORITY", "ORD PATTADAI", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "26/08/2026", "Sakthivel", "GOLD", "CHAIN", "Shanmugam", "9600654991", "Thali saradu", "24 inches", "Tk Remo hollow thali saradu", "39.960 gms", "", "NOT PRIORITY", "visting customer", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "26/08/2026", "T.Rajalakshmi", "GOLD", "BRACELET", "Vijaya", "9894161486", "Bracelet", "6.5 inches", "Center ball with plain chain bl", "4 gms", "", "NOT PRIORITY", "Bracelet", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "26/08/2026", "Poorani", "GOLD", "THALI", "அப்பாசாமி", "9443799179", "Thali pottu", "", "Reddy thali pottu", "0.330 gms", "", "BARGAIN CUSTOMER", "Reddy thali pottu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "26/08/2026", "Tharani", "SILVER", "MC PAYAL", "Yuvarani", "9443034529", "Mcpayal", "", "", "", "", "NOT PRIORITY", "mc payal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "27/08/2026", "Mangai", "GOLD", "BANGLE", "Prabakaran", "8940429433", "Kappu", "1.1", "Fancy saudi kada", "7.790 gms", "", "BARGAIN CUSTOMER", "saudi kada", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "27/08/2026", "M.Rajalakshmi", "GOLD", "CHAIN", "Amutha", "9791631677", "Thali saradu", "24 inches", "Tk o thali saradu", "24.11", "", "BARGAIN CUSTOMER", "Tk o thali saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "27/08/2026", "Tharani", "SILVER", "MC PAYAL", "Gems", "9786439978", "Mcpayal", "", "", "", "", "NOT PRIORITY", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "27/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Selvi", "9443659341", "Silver Metty", "", "Plain", "", "", "NOT PRIORITY", "Silver Metty", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "28/08/2026", "Karthiga", "GOLD", "STUD", "Suhashini", "9941824971", "Stone stud", "", "One Dark red stone stud", "2 gms", "", "NOT PRIORITY", "STUD", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "29/08/2026", "Rasathi", "SILVER", "KAPPU", "Hema", "8300437319", "Silver Bracelet", "6.5", "Stone", "5.3", "", "NOT PRIORITY", "Silver Bracelet", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "29/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Balamurugan", "8056470322", "Silver Tumbler", "", "", "70", "", "NOT PRIORITY", "Silver Tumbler", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "29/08/2026", "Selvam", "SILVER", "THAGADU ITEM", "Prakash", "9944394436", "Ord pattadai", "10.5", "Getty pattadai", "95.2", "", "NOT PRIORITY", "Ord pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "29/08/2026", "Tharani", "SILVER", "MC PAYAL", "Bhuvana", "8682090210", "Ord pattadai", "9.5", "Taitanic model", "168.6", "", "NOT PRIORITY", "Ord pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "29/08/2026", "Meenatchi", "SILVER", "STERLING", "Venkatesan", "8825710479", "Kappu", "2.14", "U kada", "26.4", "", "NOT PRIORITY", "Kappu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "29/08/2026", "Sakthivel", "GOLD", "CHAIN", "Annamalai", "9443971075", "Chain", "18 inches", "They have model", "16 gms", "", "WITHIN A WEEK", "Chain", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "29/08/2026", "Kayalvizhi", "GOLD", "STUD", "Nithya Kumar", "9489818642", "Hear ring", "Big size", "Plain hear ring", "2 gms", "", "NOT PRIORITY", "Hear ring", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "29/08/2026", "Karthiga", "GOLD", "STUD", "Sengunthan", "9842470595", "Stone jimiky", "", "Sip stone jimiky sippa", "6.990 gms", "", "NOT PRIORITY", "Sip stone jimiky sippa", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "30/08/2026", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Kala", "9159325278", "Ord pattadai", "10.5", "Getty pattadai", "155.8", "", "NOT PRIORITY", "Ord pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "30/08/2026", "Sakthivel", "GOLD", "CHAIN", "Kumar Vijayalakshmi", "9629972666", "Thali saradu", "24 inches", "Lak MC thali saradu", "40.120 gms", "", "NOT PRIORITY", "Thali saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "30/08/2026", "Poorani", "GOLD", "CHAIN", "Kumari", "9345601355", "Chain", "18 inches", "Leaf fancy chain", "4.130 gms", "", "NOT PRIORITY", "Chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "30/08/2026", "Umadevi", "GOLD", "STUD", "", "", "Stud drops", "", "Rope casting drops", "3.030 gms", "", "BARGAIN CUSTOMER", "Stud drops", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "30/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Shankar", "9566688214", "Silver couples Ring", "", "", "", "", "NOT PRIORITY", "Silver couples Ring", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "30/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Keerthana", "8778248881", "Silver chain", "20 inches", "", "10", "", "NOT PRIORITY", "Silver chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "30/08/2026", "Samundeeswari", "SILVER", "KAPPU", "Vignesh", "8608998240", "Kappu", "2.6", "Vel kappu", "27", "", "BARGAIN CUSTOMER", "Kappu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "30/08/2026", "Sujatha", "SILVER", "KUTHUVILAKKU", "", "", "Silver Metty", "1", "Plain design", "8.6", "", "NOT PRIORITY", "Silver Metty", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "31/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Claris", "9566783744", "Silver Bracelet", "7", "3+1", "24.6", "", "BARGAIN CUSTOMER", "Silver Bracelet", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "31/08/2026", "Rasathy", "SILVER", "KAPPU", "Suriya", "9578914002", "Silver Ring", "20", "", "4", "", "NOT PRIORITY", "Silver Ring", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "31/08/2026", "Kayalvizhi", "GOLD", "STUD", "Moorthy", "8098903392", "Mattal", "", "Rou type delhi mattal", "2.050 gms", "", "BARGAIN CUSTOMER", "Mattal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "31/08/2026", "88", "GOLD", "CHAIN", "Jayasree", "9042381506", "Chain", "18 inches", "Getty chain with fancy type", "8 gms", "", "NOT PRIORITY", "Chain", "DONE", "NA", "NA", "NA", "NA", "NA", "NA"], ["PDY", "31/08/2026", "Sakthivel", "GOLD", "CHAIN", "Sherintaj", "8754826607", "Chain", "18 inches", "Mc black beeds chain", "26.790 gms", "", "WITHIN A WEEK", "Chain", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "31/08/2026", "Sujatha", "SILVER", "KUTHUVILAKKU", "Aruna", "9952527812", "Silver stud", "Small", "Student stud", "", "", "NOT PRIORITY", "Silver stud", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "31/08/2026", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Kasthuri", "7708273135", "Silver Bar", "", "", "50 gram", "", "NOT PRIORITY", "Silver Bar", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["KKL", "2026-01-08", "Santhiya", "GOLD", "STUD", "Jeeva", "9842622753", "Stud", "-", "Sutd & Jimiky", "2 GM", "", "WITHIN A WEEK", "STUD JIMIKKY", "DONE", "STOCK IN HAND", "NA", "YES", "", "YES", "NA"], ["KKL", "2026-01-08", "Manogari", "SILVER", "SILVER", "ஜெயந்தி", "9750819448", "Kolusu", "6", "Plain model", "47 GM", "", "NOT PRIORITY", "mc payal", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["KKL", "2026-07-08", "Anitha", "SILVER", "SILVER", "Santhosh", "6369544190", "Sil Chain", "18", "1+1", "33 GM", "", "NOT PRIORITY", "GENTS CHAIN", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["KKL", "2026-07-08", "RaviKannan", "GOLD", "CHAIN/THALI", "Santhosh", "6369544190", "NOSELATE", "-", "Valayam type Noselate", "-", "", "NOT PRIORITY", "PLAIN VALAYAM NOS", "DONE", "STOCK IN HAND", "NA", "NA", "", "NOT AVAILABLE", "NA"], ["KKL", "2026-08-08", "Sivashankari", "SILVER", "SILVER", "Deelipkumar", "9976925377", "Couple Ring", "22-16", "Plain & Normal Design Ring", "5 GM TO 10 GM", "", "NOT PRIORITY", "PAIR RING", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["KKL", "2026-10-08", "Kasinathan", "GOLD", "CHAIN/THALI", "Anbalagi", "9585426841", "Gundu & Mattal", "-", "-", "5 GM", "", "NOT PRIORITY", "GUNDU & MATTAL", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["KKL", "2026-10-08", "Govindaraj", "GOLD", "STUD", "Nalini", "8015637703", "Stud", "-", "-", "3 GM", "", "NOT PRIORITY", "KAS STUD & CASTING STUD", "DONE", "NEW ORDER", "APPROVED", "PENDING", "", "NA", "NA"], ["KKL", "17/08/2026", "MONAGARI", "SILVER", "SILVER", "SARANYA", "9047758177", "ORD PATTADAI", "5.5\"", "1MUTHU", "30 GRAM", "", "NOT PRIORITY", "ord pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["KKL", "19/08/2026", "Manogari", "SILVER", "SILVER", "Anshiya", "9842116983", "பணம் பற்றாக்குறை", "9.5", "Ord Pattadai", "99 GM", "", "BARGAIN CUSTOMER", "ord pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["KKL", "19/08/2026", "Anitha", "SILVER", "SILVER", "Akila", "7339171546", "விக்ரகம்", "-", "Saraswathi", "30 gm", "", "NOT PRIORITY", "SARASWATHI VIGRAGAM", "DONE", "INTERBRANCH TRANSFER", "APPROVED", "PENDING", "", "PENDING", "NA"], ["KKL", "20/08/2026", "Arunprakash", "GOLD", "BL/BANGLE", "Anitha", "9003347117", "BRACELET", "6", "Ladies Casting", "4 GM", "", "BARGAIN CUSTOMER", "CASTING BL", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "", "NA", "NA"], ["KKL", "20/08/2026", "Govindaraj", "GOLD", "RING", "Rajkumar", "9791204048", "Ring", "16", "Plain Ring", "4 Gm", "", "BARGAIN CUSTOMER", "PLAIN RING", "DONE", "STOCK IN HAND", "NA", "NA", "", "YES", "COMPLETED"], ["KKL", "21/08/2026", "Kasinathan", "GOLD", "CHAIN/THALI", "Anbuselvam", "7439547952", "NOSELATE", "-", "STONE NOSELATE", "0.16", "", "BARGAIN CUSTOMER", "STONE NOS", "DONE", "STOCK IN HAND", "NA", "NA", "", "YES", "CUSTOMER DIDN'T PURCHASE"], ["KKL", "26/08/2026", "Anitha", "SILVER", "SILVER", "Praveena", "9025069589", "Kolusu", "9", "M/c Payal", "63 GM", "", "BARGAIN CUSTOMER", "MC PAYAL", "DONE", "STOCK IN HAND", "NA", "NA", "", "YES", "NA"], ["KKL", "27/08/2026", "Manogari", "SILVER", "SILVER", "Lakshmi", "9597758328", "Bar Ring", "14 & 18", "Cuple Ring", "5 GM", "", "BARGAIN CUSTOMER", "RING", "DONE", "STOCK IN HAND", "NA", "NA", "", "YES", ""], ["KKL", "28/08/2026", "Kasinathan", "GOLD", "CHAIN/THALI", "Rathika", "9442901466", "பணம் பற்றாக்குறை", "-", "-", "8 GM", "", "BARGAIN CUSTOMER", "", "", "STOCK IN HAND", "NA", "NA", "", "", ""], ["KKL", "29/08/2026", "Sivashankari", "SILVER", "SILVER", "Devi", "6385694817", "Silver Payal", "10.5", "Plain Snake Type", "30 Gm TO 45 Gm", "", "BARGAIN CUSTOMER", "MC PAYAL", "DONE", "NEW ORDER", "NA", "NA", "", "NA", "NA"], ["KKL", "31/08/2026", "K. ANITHA", "SILVER", "SILVER", "KEERTHIKA", "9025147553", "ADJUSTMENT METTY", ".", "SPRING", "12 TO 15 GM", "", "NOT PRIORITY", "METTY", "DONE", "NEW ORDER", "NA", "NA", "", "NA", "NA"], ["CUD", "2026-01-08", "41445", "GOLD", "BANGLE", "JAYANTHI", "8072604914", "BANGLE", "-", "SINGLE BANGLE", "8 GM", "", "NOT PRIORITY", "SINGLE BANGLE", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "", "NA", "NA"], ["CUD", "2026-02-08", "41464", "GOLD", "STUD", "albert", "9894908745", "DROPS", "-", "DROPS", "6 GM", "", "WITHIN A WEEK", "DROPS", "DONE", "INTERBRANCH TRANSFER", "APPROVED", "YES", "", "", ""], ["CUD", "2026-03-08", "41497", "SILVER", "SILVER", "DEEPAK", "9944875461", "METTY", "-", "SPRING METTY STONE", "15 GM", "", "NOT PRIORITY", "METTY", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "", "NA", "NA"], ["CUD", "2026-05-08", "41524", "SILVER", "SILVER", "V.LATHA", "9944744351", "SILVER STUD", "-", "SILVER VIOLET STONE STUD", "-", "", "NOT PRIORITY", "STUD", "DONE", "NEW ORDER", "NA", "NA", "", "NA", "NA"], ["CUD", "2026-05-08", "41483", "GOLD", "LM/NECKLACE", "ARUL", "9786537216", "NECKLACE", "-", "NECKLACE", "8 TO 12 GM", "", "WITHIN 2 - 4 DAYS", "LM/NECKLACE", "DONE", "NEW ORDER", "APPROVED", "PENDING", "", "", ""], ["CUD", "2026-06-08", "41529", "GOLD", "COIN", "KAMALA KANNAN", "9944161684", "COIN", "-", "COIN", "2 GM", "", "BARGAIN CUSTOMER", "COIN", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["CUD", "2026-06-08", "41529", "GOLD", "COIN", "KAMALA KANNAN", "9944161684", "COIN", "-", "COIN", "2 GM", "", "BARGAIN CUSTOMER", "COIN", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["CUD", "2026-09-08", "41529", "GOLD", "LM/NECKLACE", "KALYANA MOORTHY", "9787773214", "LM", "-", "ARUMBU LM", "24 GM", "", "NOT PRIORITY", "LM/NECKLACE", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["CUD", "14/08/2026", "41464", "GOLD", "COIN", "MAHESHWARI", "9488629031", "COIN", "", "COIN", "2 GM", "", "BARGAIN CUSTOMER", "COIN", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["CUD", "14/08/2026", "41445", "GOLD", "THALI", "KAVITHA", "7639501732", "THALI GUNDU", "-", "GUNDU", "2 GM", "", "BARGAIN CUSTOMER", "THALI", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["CUD", "15/08/2026", "41306", "GOLD", "CHAIN / THALI SARADU", "PANDIAN", "8667596021", "SARADU", "24", "LAK REMO SARADU", "24 GM", "", "BARGAIN CUSTOMER", "SARADU", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["CUD", "16/08/2026", "41470", "GOLD", "STUD", "RAJESHWARI", "6385237421", "STUD", "-", "STUD", "4 GM", "", "BARGAIN CUSTOMER", "STUD", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["CUD", "16/08/2026", "41483", "GOLD", "STUD", "DHURGA", "7539924218", "JIMIKY", "-", "JIMIKY", "2 GM", "", "NOT PRIORITY", "JIMIKY", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["CUD", "17/08/2026", "41445", "GOLD", "RING", "MEERA", "8940170969", "RING", "18", "GENTS PLAIN RING", "1 GM", "", "NOT PRIORITY", "GENTS RING", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "", "NA", "NA"], ["CUD", "17/08/2026", "41483", "GOLD", "COIN", "MITHRA", "8495065849", "COIN", "-", "D. COIN", "1.5", "", "WITHIN 2 - 4 DAYS", "COIN", "DONE", "INTERBRANCH TRANSFER", "APPROVED", "YES", "", "YES", "COMPLETED"], ["CUD", "17/08/2026", "41499", "GOLD", "STUD", "ABINAYA", "9500553325", "DROPS", "-", "DROPS", "4 GM", "", "BARGAIN CUSTOMER", "DROPS", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["CUD", "18/08/2026", "41451", "SILVER", "SILVER", "latha", "9488788412", "VARALAKSHMI MUGAM", "-", "VARALAKSHMI MUGAM", "54 , 56 GM", "", "URGENT", "VARALAKSHMI MUGAM", "DONE", "INTERBRANCH TRANSFER", "APPROVED", "YES", "", "YES", ""], ["CUD", "19/08/2026", "41529", "GOLD", "COIN", "SARAVANAN", "9442513898", "COIN", "-", "COIN", "8 GM", "", "BARGAIN CUSTOMER", "COIN", "DONE", "NA", "NA", "NA", "", "NA", "NA"], ["CUD", "20/08/2026", "41529", "GOLD", "LM/NECKLACE", "SATHISH", "7502123524", "LM", "-", "RAJ COUT", "24 GM", "", "BARGAIN CUSTOMER", "RAJ COUT LM", "NA", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["CUD", "20/08/2026", "DAYANA MARY", "GOLD", "LM/NECKLACE", "SATHISH", "7502123524", "HARAM", "-", "ALL DESING", "24GM", "", "NOT PRIORITY", "ALL DESIGN", "NA", "NA", "NA", "NA", "", "NA", "NA"], ["CUD", "20/08/2026", "ELAKIYA", "GOLD", "STUD", "SATHIYA", "9789638295", "DROPS", "-", "ROPE DROPS", "3GM", "", "NOT PRIORITY", "ROPE DROPS", "NA", "NEW ORDER", "APPROVED", "PENDING", "", "", ""], ["CUD", "21/08/2026", "41483", "GOLD", "CHAIN / THALI SARADU", "BARATH", "8220821262", "SARADU", "24", "REMO SPL SARADU", "24 GM", "", "NOT PRIORITY", "REMO SPL SARADU", "NA", "NEW ORDER", "APPROVED", "YES", "", "", ""], ["CUD", "22/08/2026", "41451", "GOLD", "RING", "RANI AMMAL", "9524574530", "RING", "14,15", "ARUMBU RING , HEART RING", "1 GM", "", "URGENT", "ARUMBU RING", "", "NEW ORDER", "APPROVED", "PENDING", "", "", ""], ["CUD", "24/08/2026", "41470", "SILVER", "SILVER", "KAVIYARASI", "9500647179", "STUD", "-", "SILVER STUD", "-", "", "NOT PRIORITY", "SILVER STUD", "DONE", "NEW ORDER", "", "PENDING", "NA", "NA", "NA"], ["CUD", "25/08/2026", "41483", "GOLD", "CHAIN / THALI SARADU", "SURESH", "9865078167", "CHAIN", "18", "KATH LEAF", "8 GM", "", "WITHIN A WEEK", "KATH LEAF CHAIN", "DONE", "STOCK IN HAND", "APPROVED", "YES", "", "YES", ""], ["CUD", "28/08/2026", "ARUNA", "GOLD", "DOLLAR", "41483", "8610820929", "DOLLAR", "-", "STONE DOLLAR", "0.500 TO 1 GM", "", "NOT PRIORITY", "STONE DOLLAR", "", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "", "", ""], ["CUD", "28/08/2026", "41306", "GOLD", "CHAIN / THALI SARADU", "PREMA", "8973324545", "CHAIN", "24", "CHAIN", "20 GM", "", "NOT PRIORITY", "CHAIN/ HO ERRUKU ELLA ORDER", "", "NA", "NA", "NA", "", "", ""], ["CUD", "28/08/2026", "41499", "GOLD", "COIN", "VENKAT", "9585595174", "COIN", "-", "COIN", "2 GM", "", "WITHIN 2 - 4 DAYS", "COIN", "", "INTERBRANCH TRANSFER", "APPROVED", "YES", "", "", ""], ["CUD", "29/08/2026", "41451", "GOLD", "SILVER", "SANKARA LINGAM", "8122604774", "KOLUSU", "-", "KOLUSU", "20 GM", "", "BARGAIN CUSTOMER", "KOLUSU", "", "", "", "", "", "", ""], ["CUD", "29/08/2026", "41499", "GOLD", "COIN", "JAYARATCHAGAN", "9384903288", "COIN", "-", "COIN", "1 GM", "", "NOT PRIORITY", "K. COIN", "", "INTERBRANCH TRANSFER", "APPROVED", "YES", "", "", ""], ["VPM", "2026-01-08", "RAMESH", "GOLD", "CHAIN", "GOVINTHAMMAL", "8883531114", "CHAIN", "", "TOKYO REMO", "8.000 grms", "", "NOT PRIORITY", "TOKYO REMO CHAIN", "DONE", "NA", "NA", "NA", "", "", ""], ["VPM", "2026-01-08", "GOMATHI", "SILVER", "MC PAYAL", "SANJAY", "7010186450", "MC PAYAL", "9.5", "PLAIN URUTTU", "20.00gms", "", "NOT PRIORITY", "mc payal", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "2026-02-08", "BALAMURUGAN", "GOLD", "RING", "VIGNESH", "6379139463", "RING", "20 size", "MAHARAJA RING", "4.000 grms", "", "WITHIN A WEEK", "MAHARAJA RING", "DONE", "NEW ORDER", "APPROVED", "PENDING", "", "PENDING", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "2026-03-08", "Mavuniya", "GOLD", "BANGLE", "Hemalatha", "9789537569", "Bangle", "2.6", "M/c BANGLE", "32.000gm", "", "NOT PRIORITY", "M/c BANGLE", "DONE", "NEW ORDER", "APPROVED", "PENDING", "", "PENDING", ""], ["VPM", "2026-03-08", "Keerthi", "SILVER", "STERLING", "Kavitha", "9751319081", "Bangle", "2.8", "Plain", "30 grams", "", "NOT PRIORITY", "BANGLE", "DONE", "INTERBRANCH TRANSFER", "APPROVED", "YES", "", "", ""], ["VPM", "2026-03-08", "Dharasathan", "GOLD", "STUD", "Janakie", "8220114423", "Earing", "", "CBe earing", "0.67", "", "BARGAIN CUSTOMER", "CBe earing", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "2026-04-08", "Gomathi", "SILVER", "ORD PATTADAI", "Aruna", "6369379319", "Ordnarypattadai", "10.5", "Kushpu pattadai", "113.4 gram", "", "WITHIN 2 - 4 DAYS", "Kushpu pattadai", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["VPM", "2026-05-08", "SATHIYAVANI", "SILVER", "ORD PATTADAI", "KATHAMUTHU", "9840238364", "KOLUSU", "10", "SINGLE MUTHU KOLUSU", "130 grms", "", "NOT PRIORITY", "ORD PATTADAI", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "2026-06-08", "Sathiyavani", "SILVER", "MC PAYAL", "Muthulakshmi", "9994171820", "Getty kappu", "5.5", "Plain", "20 grams", "", "WITHIN A WEEK", "ketty kappu plain", "DONE", "", "", "", "", "", "NA"], ["VPM", "2026-07-08", "A.sathiyavani", "SILVER", "MC PAYAL", "Prabu", "9655457606", "Kolusu", "7", "Getty", "34 to 40", "", "WITHIN A WEEK", "ketty kolusu", "DONE", "", "", "", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "2026-07-08", "KEERTHI", "SILVER", "ORD PATTADAI", "ASHOK", "9942889090", "PATTADAI", "10", "KETTY KOLUSU", "159.4 grms", "", "NOT PRIORITY", "ketty kolusu", "DONE", "", "", "", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "2026-07-08", "KEERTHI", "SILVER", "KAMATCHI AMMAN VILAKU", "CHANDRASEKAR", "8778303239", "AMMAN MUGAM", "", "AMMAN MUGAM", "50 to 60 grms", "", "NOT PRIORITY", "AMMAN MUGAM", "DONE", "", "", "", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "2026-08-08", "Gandhimathi", "GOLD", "STUD", "GUNASEKARAN", "9840732470", "EARINGS DROPS", "", "", "4.000 grms", "", "NOT PRIORITY", "earings drops", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["VPM", "2026-08-08", "DHASARADHAN", "GOLD", "COIN", "VIJI", "9626884248", "Coin", "", "", "2.000 grms", "", "NOT PRIORITY", "coin", "DONE", "INTERBRANCH TRANSFER", "APPROVED", "PENDING", "", "PENDING", "NA"], ["VPM", "2026-08-08", "Sathiyavani", "SILVER", "ORD PATTADAI", "Guna", "7708873210", "Golusu", "6", "Kushbu pattadai", "73.100 grams", "", "NOT PRIORITY", "kuspu kolusu", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["VPM", "2026-09-08", "PAVATHARANI", "SILVER", "KAMATCHI AMMAN VILAKU", "THAMIZHARASAN", "9159820907", "BASIN", "", "", "20 to 30 grms", "", "NOT PRIORITY", "BASIN", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "2026-09-08", "Gomathi", "SILVER", "MC PAYAL", "Thirunavukarasu", "9944063957", "Golusu", "7.5", "Kushpu pattadai", "80", "", "WITHIN A WEEK", "Kushpu pattadai", "DONE", "INTERBRANCH TRANSFER", "APPROVED", "YES", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "2026-09-08", "VANITHA", "GOLD", "BANGLE", "SHANTHI", "9629831809", "BABY BANGLE", "2 size", "BOMBAY FANCY", "8.010 grms", "", "NOT PRIORITY", "2 size baby bangle", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "2026-11-08", "Pavatharani", "SILVER", "STERLING", "Manusudar", "9715323669", "Stud", "", "Plain", "1 to 3 grams", "", "NOT PRIORITY", "silver plain stud", "DONE", "NA", "NA", "NA", "", "NA", "NA"], ["VPM", "2026-12-08", "Pavatharani", "SILVER", "STERLING", "Priya", "9786257359", "Bangle", "1.12", "More collection", "15grams", "", "NOT PRIORITY", "BANGLES", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "14/08/2026", "Saraswathy", "SILVER", "ORD PATTADAI", "Kumar", "9894430103", "Perumal patham", "", "Perumal patham", "5 pcs (13.000 grams)", "", "URGENT", "Perumal patham", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "", "NA", "NA"], ["VPM", "15/08/2026", "ABIRAMI", "GOLD", "BANGLE", "PURUSHOTHAMAN", "8870108064", "SINGLE ADJUSTABLE KAPPU", "", "FANCY ODEL", "4.00GM", "", "WITHIN A WEEK", "adjustable kappu", "DONE", "STOCK IN HAND", "NA", "NA", "", "YES", "COMPLETED"], ["VPM", "15/08/2026", "Saraswathy", "SILVER", "KAMATCHI AMMAN VILAKU", "Rubesh", "9498824898", "Kamatchiamman vilakku", "", "", "50.000 grams", "", "NOT PRIORITY", "kamachi amman vilakku", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["VPM", "15/08/2026", "VIJIYALAKSHMI", "GOLD", "THALI", "KUMAR", "9943154650", "NOSEPIN", "", "J TYPE NOSEPIN 5 stone model", "0.250 to 0.350 grms", "", "WITHIN A WEEK", "j type nosepin", "DONE", "INTERBRANCH TRANSFER", "APPROVED", "YES", "", "", "NA"], ["VPM", "16/08/2026", "vanitha", "GOLD", "BRACELET", "sudharshan", "6382506089", "bracelet", "", "casting BL", "12.000 grms", "", "WITHIN A WEEK", "cas bracelet", "DONE", "NA", "NA", "NA", "", "", ""], ["VPM", "16/08/2026", "MAVUNIYA", "GOLD", "RING", "SANDHIYA", "9597986923", "RING", "8", "Casting ring (ladies)", "2.000 grms", "", "WITHIN A WEEK", "casting ring (ladies) 8 size", "DONE", "NEW ORDER", "APPROVED", "PENDING", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "16/08/2026", "Keerthi", "SILVER", "STERLING", "Rajie siva", "9444631599", "Stud", "", "More collections", "1 to 3grams", "", "NOT PRIORITY", "silver stud", "DONE", "", "", "", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "17/08/2026", "VIJIYALAKSHMI", "GOLD", "STUD", "PANDIYAN", "9159609404", "STUD", "", "Earings drops", "1.000 grms", "", "NOT PRIORITY", "earings drops", "DONE", "STOCK IN HAND", "NA", "NA", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "17/08/2026", "Keerthi", "SILVER", "STERLING", "Jayamariya", "8610175166", "Bangle", "2.8", "More coloection", "30.000 grams", "", "URGENT", "Bangle", "DONE", "", "", "", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "18/08/2026", "ABIRAMI", "GOLD", "BANGLE", "SELVAKUMARI", "8754348087", "BANGLE", "2.10 size", "Kambi bangle", "32.000 grms", "", "NOT PRIORITY", "2.10 32gm order only", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "18/08/2026", "GOMATHI", "SILVER", "KUTHUVILAKU", "MADHINA", "9566153826", "METTY", "2", "PLAIN METTY", "16.100 grms", "", "NOT PRIORITY", "plain metty", "DONE", "STOCK IN HAND", "", "", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "18/08/2026", "Alexander", "SILVER", "KUTHUVILAKU", "Santhi", "9361587059", "Metty", "6", "Plain metty", "15", "", "NOT PRIORITY", "plain metty", "DONE", "STOCK IN HAND", "", "", "", "", "NA"], ["VPM", "18/08/2026", "Pavatharani", "SILVER", "KAMATCHI AMMAN VILAKU", "Siva", "7667199991", "காமதேனு", "", "காமதேனு", "15 grams", "", "NOT PRIORITY", "VIGRAGAM", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "19/08/2026", "VANITHA", "GOLD", "CHAIN", "BAKIYALAKSHMI", "9942480073", "Chain", "", "KERALA CHAIN", "6.040 grms", "", "NOT PRIORITY", "Kerala chain", "DONE", "STOCK IN HAND", "NA", "NA", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "21/08/2026", "VIJIYALAKSHMI", "GOLD", "STUD", "RAJESHWARI", "8220331551", "PLAIN RING TYPE EARINGS", "", "CYCLE LOCK TYPE RINGS", "3.000 grms", "", "WITHIN A WEEK", "plain lock type earings", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "22/08/2026", "BALAMURUGAN", "GOLD", "RING", "THIRUMAL", "9047109978", "RING", "18", "Madura ring", "2.000 grms", "", "NOT PRIORITY", "madhura ring", "DONE", "STOCK IN HAND", "NA", "NA", "", "", "NA"], ["VPM", "24/08/2026", "Saraswathy", "SILVER", "KUTHUVILAKU", "Sumathi", "7339016397", "Vinayagar", "", "Vinayagar", "30 grams", "", "NOT PRIORITY", "Vinayagar vigragam", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "25/08/2026", "ABIRAMI", "GOLD", "BANGLE", "JANAGAN", "9443084984", "BANGLE", "2.6", "REMO BANGLE", "16.000 grms", "", "NOT PRIORITY", "remo bangle", "DONE", "STOCK IN HAND", "NA", "NA", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "27/08/2026", "ABIRAMI", "GOLD", "BANGLE", "BANU RAVICHANDRAN", "9944610120", "BANGLE", "2.4 size", "Kambi bangle", "24.000 grms", "", "NOT PRIORITY", "Kambi type bangle", "DONE", "INTERBRANCH TRANSFER", "APPROVED", "YES", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "28/08/2026", "Gomathi", "SILVER", "ORD PATTADAI", "Ganesh", "9789794846", "Golusu", "6", "Kuthiyam model", "76 grams", "", "NOT PRIORITY", "ORD PATTADAI", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "28/08/2026", "Saraswathy", "SILVER", "STERLING", "Malathi", "9159536275", "Stud", "", "Stone stud", "2 to 3 grams", "", "WITHIN 2 - 4 DAYS", "stone stud", "DONE", "NEW ORDER", "NA", "NA", "NA", "NA", "NA"], ["VPM", "28/08/2026", "POMMI", "GOLD", "CHAIN", "BALA", "9025220336", "CHAIN", "", "", "8.000 grms", "", "NOT PRIORITY", "8.000 grms chain", "DONE", "NEW ORDER", "APPROVED", "YES", "", "", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "28/08/2026", "Keerthika", "SILVER", "STERLING", "Thahira", "8838350558", "Bracelet", "", "Fancy model (ladies)", "5 to 10", "", "NOT PRIORITY", "BL", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["VPM", "29/08/2026", "Keerthi", "SILVER", "STERLING", "Anbazhagan", "9787862999", "Bangle", "2.6", "More collection", "20 to 50 grams", "", "NOT PRIORITY", "silver bangle", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["VPM", "29/08/2026", "Pavatharani", "SILVER", "MC PAYAL", "Shabena", "8056166508", "Hep chain", "", "More collections", "60 grams", "", "NOT PRIORITY", "HEP CHAIN", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "30/08/2026", "ALEXANDER", "SILVER", "ORD PATTADAI", "BUVANESHWARI", "7448338575", "KOLUSU", "9.5", "", "98 grms", "", "NOT PRIORITY", "kolusu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "CUSTOMER DIDN'T PURCHASE"], ["VPM", "31/08/2026", "MOVUNIYA", "GOLD", "RING", "BALAKRISHNAN", "9791577835", "RING", "23", "Om ring(muruga)", "4.000 grms", "", "NOT PRIORITY", "0m ring", "DONE", "", "", "", "", "", "CUSTOMER DIDN'T PURCHASE"], ["PDY", "2026-01-09", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Babu", "9787199923", "Kappu", "1.14", "U size", "20.3", "", "NOT PRIORITY", "Kappu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-01-09", "Rasathy", "SILVER", "KAPPU", "Arunachalam", "7871954516", "Mcpayal", "9.5", "Koki type", "20.5", "", "NOT PRIORITY", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-01-09", "Jayaselvi", "GOLD", "THALI", "Lavanya", "9600572061", "Thali pottu", "", "Naidu thali pottu, plain gundu", "3.040 gms", "", "BARGAIN CUSTOMER", "Thali pottu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "YES", "COMPLETED"], ["PDY", "2026-02-09", "Rasathy", "SILVER", "KAPPU", "Sarath", "8190031131", "German silver frame", "9", "Balaji Thayar", "", "", "NOT PRIORITY", "German silver frame", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-02-09", "Sakthivel", "GOLD", "CHAIN", "Usha", "8903478779", "Thali saradu", "24 inches", "Karab sundari with flexible type", "40 gms", "", "NOT PRIORITY", "Thali saradu", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "2026-02-09", "88", "GOLD", "CHAIN", "Bala", "6379202109", "Kajal", "", "Cbe delhi kajal", "10.010 gms", "", "NOT PRIORITY", "Kajal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-02-09", "Kayalvizhi", "GOLD", "STUD", "Janani", "8682881092", "Stud drops", "", "All models", "2 gms", "", "NOT PRIORITY", "Stud drops", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "2026-02-09", "Sujatha", "SILVER", "KUTHUVILAKKU", "Mano", "9159929106", "Ord pattadai", "Baby size", "Loose type collection", "", "", "NOT PRIORITY", "Ord pattadai", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-02-09", "Selvam", "SILVER", "THAGADU ITEM", "Abi", "9599320459", "Mcpayal", "", "Fancy pattadai", "", "", "NOT PRIORITY", "Mcpayal", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-09", "Tharani", "SILVER", "MC PAYAL", "Rajan", "9092810885", "Mcpayal", "", "", "", "", "NOT PRIORITY", "mc payal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-09", "Selvam", "SILVER", "THAGADU ITEM", "Gandhimathi", "7639991591", "Ord pattadai", "10.5", "Kushbu", "96.4", "", "NOT PRIORITY", "ORD PATTADAI", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-09", "Dhanalakshmi", "SILVER", "ORD PATTADAI", "Venkatesan", "9739531185", "Ord pattadai", "9", "Chain type", "112.4", "", "NOT PRIORITY", "ORD PATTADAI", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-03-09", "Poorani", "GOLD", "BRACELET", "", "", "Bracelet", "6 inches", "Ladies bracelet", "8 gms", "", "NOT PRIORITY", "Ladies bracelet", "DONE", "NEW ORDER", "APPROVED", "YES", "NA", "NA", "NA"], ["PDY", "2026-03-09", "Tharani", "SILVER", "MC PAYAL", "", "", "Silverpayal", "10.5", "", "15 g m", "", "WITHIN A WEEK", "MC PAYAL", "DONE", "STOCK IN HAND", "APPROVED", "YES", "NA", "YES", "COMPLETED"], ["PDY", "2026-03-09", "Chithra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Bharath", "7708414832", "Krishnan vigraham", "", "", "10.4", "", "NOT PRIORITY", "VIGRAGAM", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-04-09", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Rajaram", "9962042897", "Silver Bar", "", "", "100.1", "", "NOT PRIORITY", "Silver Bar", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-04-09", "Sakthivel", "GOLD", "BANGLE", "Isaidasan", "7402001115", "Baby kada", "1.1", "Vel kada", "6 gms", "", "NOT PRIORITY", "Vel kada", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "NA", "NA", "COMPLETED"], ["PDY", "2026-04-09", "Nagarani", "GOLD", "LM/NECKLACE", "Ramachandran", "9943219097", "Maharani necklace", "", "Maharani cbe necklace", "16.640 gms", "", "BARGAIN CUSTOMER", "Maharani cbe necklace", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-05-09", "Sakthivel", "GOLD", "CHAIN", "Anitha", "9003725679", "Chain", "18 inches", "Rajkot src", "16.070 gms", "", "NOT PRIORITY", "Maharani cbe necklace", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-05-09", "Jayaselvi", "GOLD", "STUD", "Vinothini", "9087740983", "Stud drops", "", "Fancy type drops", "3 gms", "", "NOT PRIORITY", "Rajkot src", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-05-09", "Jayaselvi", "GOLD", "CHAIN", "Rajesh Kumar", "9092271001", "Chain", "18 inches", "Pushpa lot fancy chain", "8.170 gms", "", "NOT PRIORITY", "Fancy type drops", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-05-09", "UMA DEVI", "GOLD", "STUD", "Durai", "9894442069", "Jimiky", "", "Kerala jimiky", "4 to 8 gms", "", "URGENT", "Pushpa lot fancy chain", "DONE", "INTERBRANCH TRANSFER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "2026-05-09", "Nagarani", "GOLD", "LM/NECKLACE", "Sekar", "9751909471", "Long malai", "", "Man dol bombay lm with bc", "49.34", "", "WITHIN 2 - 4 DAYS", "Kerala jimiky", "DONE", "NEW ORDER", "APPROVED", "PENDING", "NA", "NA", "NA"], ["PDY", "2026-05-09", "Kayalvizhi", "GOLD", "STUD", "Vasuki", "7598810588", "Mattal", "", "Disco mc mattal", "2.120 gms", "", "WITHIN A WEEK", "Man dol bombay lm with bc", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-09", "Sujatha", "SILVER", "KUTHUVILAKKU", "Uma devi", "7418473163", "Silver Paul stud", "Small", "", "", "", "NOT PRIORITY", "silver stud", "DONE", "ITEM NOT AVAILABLE", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-09", "Murugan", "SILVER", "STERLING", "Krishnaraj", "9952263688", "Silver Ring Black enamel", "20", "", "", "", "NOT PRIORITY", "Silver Ring Black enamel", "DONE", "NEW ORDER", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-09", "Chithra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Keerthana", "8778781293", "Silver Bangle", "", "Fancy", "7.9", "", "NOT PRIORITY", "Silver Bangle", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-09", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Hariharan", "9944387883", "Silver kajal", "", "", "More than gram weight", "", "NOT PRIORITY", "Silver kajal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-09", "Sujatha", "SILVER", "KUTHUVILAKKU", "Uma", "9943319611", "Silver Metty", "4", "Plain", "More weight", "", "NOT PRIORITY", "Silver Metty", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-06-09", "91270", "GOLD", "BANGLE", "Hemavathi", "9751431653", "Bangles", "2.4", "Muruku design", "24", "", "NOT PRIORITY", "Bangles", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "NA", "NA", "NA"], ["PDY", "2026-06-09", "Tharani", "SILVER", "MC PAYAL", "Bhuvana", "9442449899", "Mcpayal", "10.5", "Koki type", "20", "", "NOT PRIORITY", "Mcpayal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-07-09", "10811", "GOLD", "CHAIN", "No", "", "Chain", "", "Tokyo remo", "24", "", "NOT PRIORITY", "Tokyo remo", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-07-09", "Sakthivel", "GOLD", "CHAIN", "Navin", "8478541481", "Thali saradu", "24 inches", "Bin lak hand made thali saradu", "40.810 gms", "", "BARGAIN CUSTOMER", "Bin lak hand made thali saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-07-09", "Sakthivel", "GOLD", "CHAIN", "Srinivasan", "9655023778", "Thali saradu", "24 inches", "Stone mogappu saradu", "32 gm to 56 gms", "", "WITHIN A WEEK", "Stone mogappu saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-08-09", "Sujatha", "SILVER", "KUTHUVILAKKU", "Kandhan", "9994539359", "Plain Metty", "6", "Plain", "15gm", "", "URGENT", "metty", "DONE", "NEW ORDER", "APPROVED", "NA", "NA", "NA", "NA"], ["PDY", "2026-09-09", "Rajalakshmi.m", "GOLD", "CHAIN", "Senthamarai", "9727169933", "Thali saradu", "24 inches", "Remo mc thalli saradu", "40.190 gms", "", "WITHIN 2 - 4 DAYS", "Remo mc thalli saradu", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-09-09", "Selvam", "SILVER", "THAGADU ITEM", "Lakshmanan", "9940807220", "My payal", "10", "Screw payal", "", "", "NOT PRIORITY", "Screw payal", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["PDY", "2026-10-09", "Sakthivel", "GOLD", "CHAIN", "Manikandan", "9944836663", "Hain", "18 inches", "Any new collection", "4 gms", "", "NOT PRIORITY", "Any new collection", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "2026-10-09", "Jayaselvi", "GOLD", "BRACELET", "Anitharaj", "9698491992", "Bracelet", "8 inches", "Stamp stamp bl", "7.820 gms", "", "BARGAIN CUSTOMER", "Stamp stamp bl", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "2026-10-09", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Sarasu", "8940788940", "Silver ashtalakshmi vilakku", "Medium", "Double side face", "", "", "NOT PRIORITY", "Double side face", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "2026-10-09", "Rasathi", "SILVER", "KAPPU", "Rajan", "8807749413", "Silver Bangle", "Baby size", "Plain design", "15.1", "", "NOT PRIORITY", "Plain design", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "2026-10-09", "Chitra", "SILVER", "KAMATCHI AMMAN VILAKKU", "Deva", "8870100804", "Silver Kappu", "1.12", "92.5 V kada", "17.7", "", "BARGAIN CUSTOMER", "92.5 V kada", "DONE", "", "", "", "NA", "NA", "NA"], ["PDY", "2026-11-09", "Sakthivel", "GOLD", "CHAIN", "Seetha Lakshmi", "9345765728", "Chain", "18 inches", "Any design", "8 gms", "", "NOT PRIORITY", "CHAIN", "DONE", "", "", "", "", "", ""], ["PDY", "2026-11-09", "Dharmabalan", "GOLD", "LM/NECKLACE", "Sridhar", "9629303131", "Necklace", "", "Maharani cbe necklace", "16.630 gms", "", "BARGAIN CUSTOMER", "LM/NECKLACE", "DONE", "", "", "", "", "", ""], ["KKL", "2026-02-09", "RaviKannan", "GOLD", "STUD", "Bathmavathi", "9345491380", "Jimiky & Bracelet &", "-", "New Collection", "12 Gm", "", "BARGAIN CUSTOMER", "", "", "", "", "", "", "", ""], ["KKL", "2026-02-09", "Anitha", "SILVER", "SILVER", "Ratha", "9865605506", "Kolusu", "10.5", "Kokki Kolusu", "47 gm", "", "WITHIN A WEEK", "MC PAYAL", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "NA"], ["KKL", "2026-07-09", "கோவிந்தராஜ்", "SILVER", "SILVER", "Muthukumar", "9443656210", "ராசி கல் மோதிரம்", "16 TO 18", "நீலம் நிறம் கல்", "5 GM", "", "BARGAIN CUSTOMER", "BLUE STONE", "DONE", "STOCK IN HAND", "", "", "", "YES", "CUSTOMER DIDN'T PURCHASE"], ["KKL", "2026-10-09", "Govindaraj", "GOLD", "RING", "Ram Kumar", "8870899968", "RING", "27'", "TV RING", "2 GRAM", "", "NOT PRIORITY", "TV RING", "DONE", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "", "NA", "NA"], ["KKL", "2026-11-09", "ANITHA", "SILVER", "SILVER", "Vaani", "7010889127", "ORD PATTADAI", "10.5", "GETTY", "110.000 Gm", "", "BARGAIN CUSTOMER", "ORD PATTADAI", "DONE", "STOCK IN HAND", "", "", "", "YES", "CUSTOMER DIDN'T PURCHASE"], ["CUD", "2026-01-09", "41306", "GOLD", "CHAIN / THALI SARADU", "VEERAPPAN", "9965651455", "CHAIN", "18", "CHAIN", "4 GM", "", "NOT PRIORITY", "CHAIN/ VISTING CUSTOUMER", "", "NA", "NA", "NA", "", "", ""], ["CUD", "2026-02-09", "DAYANA MARY", "GOLD", "BANGLE", "VIJAYAKUMAR", "9751791771", "BANGLE", "2.6", "BOM FANCY BANGLE", "48GM", "", "BARGAIN CUSTOMER", "BOMBY FANCY BANGLE", "", "NA", "NA", "NA", "", "", ""], ["CUD", "2026-03-09", "41529", "GOLD", "LM/NECKLACE", "HEMA", "9943556394", "LM", "-", "RAJCOUT LM", "24 GM", "", "WITHIN A WEEK", "RAJ COUT LM", "", "STOCK IN HAND", "APPROVED", "YES", "", "", ""], ["CUD", "2026-04-09", "41506", "GOLD", "CHAIN / THALI SARADU", "SHAIRMLA", "9994935471", "SARADU", "24", "REMO SARADU", "24 GM", "", "BARGAIN CUSTOMER", "REMO SARADU", "", "STOCK IN HAND", "NA", "NA", "", "", ""], ["CUD", "2026-06-09", "41451", "SILVER", "SILVER", "PRAKASH", "9092660455", "KOLUSU", "9.5", "KOKEY BALL TEYP KOLUSU", "40 GM", "", "BARGAIN CUSTOMER", "KOLUSU", "", "STOCK IN HAND", "NA", "NA", "", "", ""], ["CUD", "2026-07-09", "41499", "GOLD", "STUD", "NAGALINGAM", "9367646201", "STUD", "-", "NAVARATHRAM", "2 GM", "", "NOT PRIORITY", "NAVARATHRAM STUD", "", "ITEM NOT AVAILABLE", "NOT APPROVED", "NOT AVAILABLE", "", "", ""], ["VPM", "2026-02-09", "Pavatharani", "SILVER", "STERLING", "Sharmila", "8270025988", "92.5 Ring", "7", "Plain model", "3 grams", "", "NOT PRIORITY", "RING", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["VPM", "2026-02-09", "GANDHIMATHI", "GOLD", "STUD", "Uma", "8526107852", "Stud", "", "Fan bombay drops", "4.080 grams", "", "NOT PRIORITY", "BOmbay drops", "DONE", "STOCK IN HAND", "NA", "NA", "", "", ""], ["VPM", "2026-03-09", "Keerthi", "SILVER", "STERLING", "Elumalai", "9751870048", "Bracelet", "8", "3+1 model", "55 grams", "", "NOT PRIORITY", "BL", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "COMPLETED"], ["VPM", "2026-04-09", "POMMI", "GOLD", "CHAIN", "YUVASRI", "9361315699", "CHAIN", "", "", "4.000 grms", "", "NOT PRIORITY", "4.000 grms chain", "DONE", "STOCK IN HAND", "NA", "NA", "", "", ""], ["VPM", "2026-04-09", "Saraswathy", "SILVER", "STERLING", "Balaji", "9786317390", "Kada", "2.1", "More collections", "30 grams", "", "NOT PRIORITY", "silver kada", "DONE", "STOCK IN HAND", "NA", "NA", "NA", "NA", "NA"], ["VPM", "2026-04-09", "ABIRAMI", "GOLD", "BRACELET", "GOKULARASAN", "9003644869", "BRACELET", "", "", "4.000 grms", "", "NOT PRIORITY", "4.000 grms bracelet", "DONE", "STOCK IN HAND", "NA", "NA", "", "", ""], ["VPM", "2026-06-09", "Keerthika", "SILVER", "STERLING", "Razia", "9840653956", "SILVER RING", "25", "Plain", "3 grams", "", "NOT PRIORITY", "", "DONE", "STOCK IN HAND", "NA", "NA", "", "", ""], ["VPM", "2026-06-09", "DHASARATHAN", "GOLD", "COIN", "MANOJ", "8903334003", "COIN", "", "", "2.000 grms", "", "NOT PRIORITY", "2.000 grms coin", "DONE", "STOCK IN HAND", "NA", "NA", "", "", ""], ["VPM", "2026-06-09", "Pavadharani", "SILVER", "STERLING", "VINODHINI", "9344122466", "BRACELET", "BABY BL", "", "10 to 15 grms", "", "NOT PRIORITY", "baby bracelet", "DONE", "STOCK IN HAND", "NA", "NA", "", "", ""], ["VPM", "2026-07-09", "KEERTHIKA", "SILVER", "STERLING", "BHARATHI", "9442336083", "KADA", "2.12", "U-KADA", "30 grms", "", "NOT PRIORITY", "U-KADA", "DONE", "", "", "", "", "", ""], ["VPM", "2026-08-09", "ABIRAMI", "GOLD", "BANGLE", "MURUGESAN", "8489487656", "BANGLE", "2.6", "PIPE BANGLE", "24 grms", "", "NOT PRIORITY", "des pipe bangle", "DONE", "STOCK IN HAND", "NA", "NA", "", "NA", "COMPLETED"], ["VPM", "2026-09-09", "ABIRAMI", "GOLD", "BRACELET", "EZHILARASAN", "9841921521", "BRACELET", "", "", "32 grms", "", "NOT PRIORITY", "32 grms", "DONE", "NA", "NA", "NA", "", "", ""], ["VPM", "2026-10-09", "Pavatharani", "SILVER", "STERLING", "Parameswarie", "9944218639", "92.5 Ring", "23", "More collections", "3 grams", "", "NOT PRIORITY", "RING", "DONE", "", "", "", "", "", ""], ["VPM", "2026-11-09", "Pavatharani", "SILVER", "STERLING", "Subash", "9159427713", "Stud", "", "More collections", "3 grams", "", "NOT PRIORITY", "stud", "DONE", "", "", "", "", "", ""]];
+
+</script>
+<script>
+// C&B Return Customer Follow-Up Dashboard - Script
+const F = {
+  branch: 0, date: 1, employee: 2, metalType: 3, counter: 4,
+  customerName: 5, mobile: 6, product: 7, size: 8, design: 9,
+  gramRange: 10, purchaseChance: 11, priority: 12, finalProduct: 13,
+  requestInventory: 14, source: 15, mgmtApproval: 16, productSent: 17,
+  timeLag: 18, productArrived: 19, saleStatus: 20,
+  fuStatus: 21, fuMode: 22, fuDate: 23
+};
+
+let allData = [];
+let filteredData = [];
+let charts = {};
+let currentSlicer = 'ALL';
+let currentPage = 'dashboard';
+
+document.addEventListener('DOMContentLoaded', function() {
+  setTodayDate();
+  updateSyncStatus();
+  if (typeof SHEET_API_URL !== 'undefined' && SHEET_API_URL && SHEET_API_URL !== '') {
+    fetchFromSheet();
+  } else {
+    parseData();
+    populateFilters();
+    applyAllFilters();
+    updateNavBadges();
+  }
+  setTimeout(function() { document.getElementById('loadingOverlay').style.display = 'none'; }, 500);
+});
+
+function setTodayDate() {
+  var now = new Date();
+  document.getElementById('todayDate').textContent = now.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function parseData() {
+  allData = RAW_DATA.map(function(r, i) {
+    return {
+      id: i,
+      branch: r[F.branch], date: r[F.date], employee: r[F.employee],
+      metalType: r[F.metalType], counter: r[F.counter],
+      customerName: r[F.customerName], mobile: r[F.mobile],
+      product: r[F.product], size: r[F.size], design: r[F.design],
+      gramRange: r[F.gramRange], purchaseChance: r[F.purchaseChance],
+      priority: r[F.priority] || 'NOT PRIORITY', finalProduct: r[F.finalProduct],
+      requestInventory: r[F.requestInventory], source: r[F.source],
+      mgmtApproval: r[F.mgmtApproval], productSent: r[F.productSent],
+      timeLag: r[F.timeLag], productArrived: r[F.productArrived],
+      saleStatus: r[F.saleStatus],
+      fuStatus: r[F.fuStatus] || '', fuMode: r[F.fuMode] || '', fuDate: r[F.fuDate] || ''
+    };
+  });
+}
+
+// ---- PRIORITY ----
+function normalizePriority(p) {
+  var u = p.toUpperCase().trim();
+  if (u === 'URGENT') return 'URGENT';
+  if (u === 'WITHIN A WEEK') return 'WITHIN A WEEK';
+  if (u.indexOf('2 - 4') >= 0 || u.indexOf('2-4') >= 0) return 'WITHIN 2 - 4 DAYS';
+  if (u === 'BARGAIN CUSTOMER' || u.indexOf('BARGAIN') >= 0) return 'BARGAIN CUSTOMER';
+  if (u.indexOf('WEEK') >= 0) return 'WITHIN A WEEK';
+  if (u.indexOf('2') >= 0 && u.indexOf('4') >= 0) return 'WITHIN 2 - 4 DAYS';
+  return 'NOT PRIORITY';
+}
+
+function priorityClass(p) {
+  var n = normalizePriority(p);
+  if (n === 'URGENT') return 'urgent';
+  if (n === 'WITHIN A WEEK') return 'week';
+  if (n === 'WITHIN 2 - 4 DAYS') return 'days';
+  if (n === 'BARGAIN CUSTOMER') return 'bargain';
+  return 'not-priority';
+}
+
+function priorityOrder(p) {
+  var n = normalizePriority(p);
+  var order = { 'URGENT': 0, 'WITHIN A WEEK': 1, 'WITHIN 2 - 4 DAYS': 2, 'BARGAIN CUSTOMER': 3, 'NOT PRIORITY': 4 };
+  return order[n] !== undefined ? order[n] : 4;
+}
+
+function isPriorityCustomer(c) {
+  var n = normalizePriority(c.priority);
+  return n === 'URGENT' || n === 'WITHIN A WEEK' || n === 'WITHIN 2 - 4 DAYS';
+}
+
+function isCompleted(c) {
+  return (c.saleStatus || '').toUpperCase() === 'COMPLETED';
+}
+
+function isActionNeeded(c) {
+  return isPriorityCustomer(c) && !isCompleted(c);
+}
+
+// ---- FILTERS ----
+function populateFilters() {
+  var branches = [], employees = [], sources = [];
+  allData.forEach(function(c) {
+    if (c.branch && branches.indexOf(c.branch) < 0) branches.push(c.branch);
+    if (c.employee && employees.indexOf(c.employee) < 0) employees.push(c.employee);
+    if (c.source && sources.indexOf(c.source) < 0) sources.push(c.source);
+  });
+  branches.sort(); employees.sort(); sources.sort();
+  fillSelect('filterBranch', branches, 'All Branches');
+  fillSelect('filterEmployee', employees, 'All Employees');
+  fillSelect('filterSource', sources, 'All Sources');
+}
+
+function fillSelect(id, opts, defaultText) {
+  var sel = document.getElementById(id);
+  if (!sel) return;
+  sel.innerHTML = '<option value="ALL">' + defaultText + '</option>';
+  opts.forEach(function(o) { sel.innerHTML += '<option value="' + o + '">' + o + '</option>'; });
+}
+
+function resetFilters() {
+  document.getElementById('globalSearch').value = '';
+  document.getElementById('filterBranch').value = 'ALL';
+  document.getElementById('filterMetal').value = 'ALL';
+  document.getElementById('filterEmployee').value = 'ALL';
+  document.getElementById('filterSource').value = 'ALL';
+  document.getElementById('filterSaleStatus').value = 'ALL';
+  currentSlicer = 'ALL';
+  document.querySelectorAll('.slicer').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelector('.slicer[data-slicer="ALL"]').classList.add('active');
+  applyAllFilters();
+  showToast('Filters reset');
+}
+
+function applySlicer(preset, el) {
+  currentSlicer = preset;
+  document.querySelectorAll('.slicer').forEach(function(s) { s.classList.remove('active'); });
+  el.classList.add('active');
+  applyAllFilters();
+}
+
+function applyAllFilters() {
+  var search = (document.getElementById('globalSearch').value || '').toLowerCase().trim();
+  var branch = document.getElementById('filterBranch').value;
+  var metal = document.getElementById('filterMetal').value;
+  var emp = document.getElementById('filterEmployee').value;
+  var source = document.getElementById('filterSource').value;
+  var saleStatus = document.getElementById('filterSaleStatus').value;
+
+  filteredData = allData.filter(function(c) {
+    if (search) {
+      var h = [c.customerName, c.mobile, c.product, c.design, c.branch, c.counter, c.employee, c.finalProduct, c.counter].join(' ').toLowerCase();
+      if (h.indexOf(search) < 0) return false;
+    }
+    if (branch !== 'ALL' && c.branch !== branch) return false;
+    if (metal !== 'ALL' && c.metalType !== metal) return false;
+    if (emp !== 'ALL' && c.employee !== emp) return false;
+    if (source !== 'ALL' && c.source !== source) return false;
+    if (saleStatus !== 'ALL' && c.saleStatus !== saleStatus) return false;
+    if (currentSlicer !== 'ALL') {
+      if (currentSlicer === 'NOT PRIORITY' && normalizePriority(c.priority) !== 'NOT PRIORITY') return false;
+      if (currentSlicer !== 'NOT PRIORITY' && normalizePriority(c.priority) !== currentSlicer) return false;
+    }
+    return true;
+  });
+
+  updateKPIs();
+  renderMainTable();
+  renderCharts();
+  updateNavBadges();
+}
+
+// ---- KPI ----
+function updateKPIs() {
+  var total = allData.length, urgent = 0, week = 0, days = 0, bargain = 0, notPri = 0, completed = 0, gold = 0, silver = 0;
+  allData.forEach(function(c) {
+    var p = normalizePriority(c.priority);
+    if (p === 'URGENT') urgent++;
+    else if (p === 'WITHIN A WEEK') week++;
+    else if (p === 'WITHIN 2 - 4 DAYS') days++;
+    else if (p === 'BARGAIN CUSTOMER') bargain++;
+    else notPri++;
+    if (isCompleted(c)) completed++;
+    if (c.metalType === 'GOLD') gold++;
+    else if (c.metalType === 'SILVER') silver++;
+  });
+  document.getElementById('kpiTotal').textContent = total;
+  document.getElementById('kpiUrgent').textContent = urgent;
+  document.getElementById('kpiWeek').textContent = week;
+  document.getElementById('kpiDays').textContent = days;
+  document.getElementById('kpiBargain').textContent = bargain;
+  document.getElementById('kpiCompleted').textContent = completed;
+  document.getElementById('kpiNotPri').textContent = notPri;
+  document.getElementById('kpiGold').textContent = gold;
+  document.getElementById('kpiSilver').textContent = silver;
+  document.getElementById('slicerAll').textContent = total;
+  document.getElementById('slicerUrgent').textContent = urgent;
+  document.getElementById('slicerWeek').textContent = week;
+  document.getElementById('slicerDays').textContent = days;
+  document.getElementById('slicerBargain').textContent = bargain;
+  document.getElementById('slicerNotPri').textContent = notPri;
+  var aU = allData.filter(function(c) { return normalizePriority(c.priority) === 'URGENT' && !isCompleted(c); }).length;
+  var aW = allData.filter(function(c) { return normalizePriority(c.priority) === 'WITHIN A WEEK' && !isCompleted(c); }).length;
+  var aD = allData.filter(function(c) { return normalizePriority(c.priority) === 'WITHIN 2 - 4 DAYS' && !isCompleted(c); }).length;
+  var aC = allData.filter(function(c) { return isPriorityCustomer(c) && isCompleted(c); }).length;
+  document.getElementById('actionUrgent').textContent = aU;
+  document.getElementById('actionWeek').textContent = aW;
+  document.getElementById('actionDays').textContent = aD;
+  document.getElementById('actionCompleted').textContent = aC;
+  document.getElementById('navBadgeAction').textContent = aU + aW + aD;
+}
+
+function updateNavBadges() {
+  var urgent = 0, week = 0, days = 0, bargain = 0, notPri = 0, completed = 0;
+  allData.forEach(function(c) {
+    var p = normalizePriority(c.priority);
+    if (p === 'URGENT') urgent++;
+    else if (p === 'WITHIN A WEEK') week++;
+    else if (p === 'WITHIN 2 - 4 DAYS') days++;
+    else if (p === 'BARGAIN CUSTOMER') bargain++;
+    else notPri++;
+    if (isCompleted(c)) completed++;
+  });
+  document.getElementById('navBadgeUrgent').textContent = urgent;
+  document.getElementById('navBadgeWeek').textContent = week;
+  document.getElementById('navBadgeDays').textContent = days;
+  document.getElementById('navBadgeBargain').textContent = bargain;
+  document.getElementById('navBadgeNotPri').textContent = notPri;
+  document.getElementById('navBadgeCompleted').textContent = completed;
+}
+
+// ---- TABLES ----
+function renderMainTable() {
+  var sorted = filteredData.slice().sort(function(a, b) { return priorityOrder(a.priority) - priorityOrder(b.priority); });
+  var tbody = document.getElementById('mainTableBody');
+  tbody.innerHTML = sorted.map(function(c, i) {
+    return '<tr class="cursor-pointer" onclick="openDetail(' + c.id + ')">' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td><span class="badge ' + priorityClass(c.priority) + '">' + esc(normalizePriority(c.priority)) + '</span></td>' +
+      '<td><strong>' + esc(c.customerName) + '</strong></td>' +
+      '<td>' + esc(c.mobile) + '</td>' +
+      '<td>' + esc(c.branch) + '</td>' +
+      '<td><span class="badge ' + (c.metalType === 'GOLD' ? 'gold' : 'silver') + '">' + esc(c.metalType) + '</span></td>' +
+      '<td>' + esc(c.product) + '</td>' +
+      '<td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(c.design) + '">' + esc(c.design || c.finalProduct) + '</td>' +
+      '<td>' + esc(c.gramRange) + '</td>' +
+      '<td><span class="badge ' + sourceBadge(c.source) + '">' + esc(c.source) + '</span></td>' +
+      '<td><span class="badge ' + mgmtBadge(c.mgmtApproval) + '">' + esc(c.mgmtApproval) + '</span></td>' +
+      '<td><span class="badge ' + saleBadge(c.saleStatus) + '">' + esc(c.saleStatus || 'Pending') + '</span></td>' +
+      '<td>' + esc(c.employee) + '</td>' +
+      '<td>' + fmtDate(c.date) + '</td>' +
+      '<td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(c.purchaseChance) + '">' + esc(c.purchaseChance) + '</td>' +
+      '<td onclick="event.stopPropagation()">' + renderActions(c) + '</td></tr>';
+  }).join('');
+  document.getElementById('tableCount').textContent = sorted.length + ' customers';
+  document.getElementById('tableTitle').textContent = (currentSlicer === 'ALL' ? 'All Customers' : currentSlicer) + ' (' + filteredData.length + ')';
+}
+
+function renderPriorityTable(data, tbodyId) {
+  var sorted = data.slice().sort(function(a, b) { return priorityOrder(a.priority) - priorityOrder(b.priority); });
+  var tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = sorted.map(function(c, i) {
+    return '<tr class="cursor-pointer" onclick="openDetail(' + c.id + ')">' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td><strong>' + esc(c.customerName) + '</strong></td>' +
+      '<td>' + esc(c.mobile) + '</td>' +
+      '<td>' + esc(c.branch) + '</td>' +
+      '<td><span class="badge ' + (c.metalType === 'GOLD' ? 'gold' : 'silver') + '">' + esc(c.metalType) + '</span></td>' +
+      '<td>' + esc(c.product) + '</td>' +
+      '<td>' + esc(c.design || c.finalProduct) + '</td>' +
+      '<td>' + esc(c.source) + '</td>' +
+      '<td><span class="badge ' + saleBadge(c.saleStatus) + '">' + esc(c.saleStatus || 'Pending') + '</span></td>' +
+      '<td>' + esc(c.employee) + '</td>' +
+      '<td onclick="event.stopPropagation()">' + renderActions(c) + '</td></tr>';
+  }).join('');
+}
+
+function renderBargainTable() {
+  var data = allData.filter(function(c) { return normalizePriority(c.priority) === 'BARGAIN CUSTOMER'; });
+  var tbody = document.getElementById('bargainTableBody');
+  tbody.innerHTML = data.map(function(c, i) {
+    return '<tr class="cursor-pointer" onclick="openDetail(' + c.id + ')">' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td><strong>' + esc(c.customerName) + '</strong></td>' +
+      '<td>' + esc(c.mobile) + '</td>' +
+      '<td>' + esc(c.branch) + '</td>' +
+      '<td><span class="badge ' + (c.metalType === 'GOLD' ? 'gold' : 'silver') + '">' + esc(c.metalType) + '</span></td>' +
+      '<td>' + esc(c.product) + '</td>' +
+      '<td>' + esc(c.design || c.finalProduct) + '</td>' +
+      '<td>' + esc(c.source) + '</td>' +
+      '<td><span class="badge ' + saleBadge(c.saleStatus) + '">' + esc(c.saleStatus || 'Pending') + '</span></td>' +
+      '<td>' + esc(c.employee) + '</td>' +
+      '<td>' + esc(c.purchaseChance) + '</td>' +
+      '<td onclick="event.stopPropagation()">' + renderActions(c) + '</td></tr>';
+  }).join('');
+}
+
+function renderCompletedTable() {
+  var data = allData.filter(function(c) { return isCompleted(c); });
+  var tbody = document.getElementById('completedTableBody');
+  tbody.innerHTML = data.map(function(c, i) {
+    return '<tr class="cursor-pointer" onclick="openDetail(' + c.id + ')">' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td><strong>' + esc(c.customerName) + '</strong></td>' +
+      '<td>' + esc(c.mobile) + '</td>' +
+      '<td>' + esc(c.branch) + '</td>' +
+      '<td><span class="badge ' + (c.metalType === 'GOLD' ? 'gold' : 'silver') + '">' + esc(c.metalType) + '</span></td>' +
+      '<td>' + esc(c.product) + '</td>' +
+      '<td>' + esc(c.design || c.finalProduct) + '</td>' +
+      '<td><span class="badge ' + priorityClass(c.priority) + '">' + esc(normalizePriority(c.priority)) + '</span></td>' +
+      '<td>' + esc(c.employee) + '</td>' +
+      '<td>' + fmtDate(c.date) + '</td></tr>';
+  }).join('');
+}
+
+function renderAllTable() {
+  var tbody = document.getElementById('allTableBody');
+  tbody.innerHTML = allData.map(function(c, i) {
+    return '<tr class="cursor-pointer" onclick="openDetail(' + c.id + ')">' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td><span class="badge ' + priorityClass(c.priority) + '">' + esc(normalizePriority(c.priority)) + '</span></td>' +
+      '<td><strong>' + esc(c.customerName) + '</strong></td>' +
+      '<td>' + esc(c.mobile) + '</td>' +
+      '<td>' + esc(c.branch) + '</td>' +
+      '<td><span class="badge ' + (c.metalType === 'GOLD' ? 'gold' : 'silver') + '">' + esc(c.metalType) + '</span></td>' +
+      '<td>' + esc(c.counter) + '</td>' +
+      '<td>' + esc(c.product) + '</td>' +
+      '<td>' + esc(c.design || c.finalProduct) + '</td>' +
+      '<td>' + esc(c.gramRange) + '</td>' +
+      '<td>' + esc(c.source) + '</td>' +
+      '<td><span class="badge ' + mgmtBadge(c.mgmtApproval) + '">' + esc(c.mgmtApproval) + '</span></td>' +
+      '<td><span class="badge ' + saleBadge(c.saleStatus) + '">' + esc(c.saleStatus || 'Pending') + '</span></td>' +
+      '<td>' + esc(c.employee) + '</td>' +
+      '<td>' + fmtDate(c.date) + '</td>' +
+      '<td>' + esc(c.purchaseChance) + '</td></tr>';
+  }).join('');
+}
+
+function renderActions(c) {
+  var h = '<div class="action-btns">';
+  if (c.mobile) {
+    h += '<a href="tel:' + c.mobile + '" class="action-btn call" title="Call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/></svg></a>';
+    h += '<a href="https://wa.me/91' + c.mobile + '?text=Hello%20' + encodeURIComponent(c.customerName) + '%2C%20This%20is%20from%20Shiva%20Valli%20Vilas%20Jewellers.%20We%20are%20following%20up%20regarding%20your%20recent%20interest%20in%20' + encodeURIComponent(c.product) + '.%20Kindly%20visit%20us%20or%20let%20us%20know%20if%20you%20need%20any%20help." target="_blank" class="action-btn whatsapp" title="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>';
+  }
+  h += '<button class="action-btn view" onclick="openDetail(' + c.id + ')" title="View"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>';
+  h += '</div>';
+  return h;
+}
+
+// ---- ACTION PLAN ----
+function renderActionPlan() {
+  var actionCustomers = allData.filter(function(c) { return isActionNeeded(c); });
+  actionCustomers.sort(function(a, b) { return priorityOrder(a.priority) - priorityOrder(b.priority); });
+  var container = document.getElementById('actionPlanCards');
+  if (actionCustomers.length === 0) {
+    container.innerHTML = '<div class="empty-state"><h3>All Priority Follow-ups Done!</h3><p>No pending priority customers.</p></div>';
+    return;
+  }
+  container.innerHTML = actionCustomers.map(function(c) {
+    var p = normalizePriority(c.priority);
+    var pc = priorityClass(c.priority);
+    var parts = c.customerName.split(' ');
+    var initials = (parts[0][0] || '') + (parts[1] ? parts[1][0] : '');
+    initials = initials.toUpperCase().substring(0, 2);
+    return '<div class="followup-card priority-' + pc + '">' +
+      '<div class="followup-avatar ' + pc + '">' + initials + '</div>' +
+      '<div class="followup-info">' +
+        '<h4>' + esc(c.customerName) + ' <span class="badge ' + pc + '" style="margin-left:4px">' + p + '</span></h4>' +
+        '<div class="meta">' +
+          '<span>' + esc(c.mobile) + '</span>' +
+          '<span>' + esc(c.branch) + '</span>' +
+          '<span>' + esc(c.metalType) + '</span>' +
+          '<span>' + esc(c.counter) + '</span>' +
+          '<span>' + esc(c.employee) + '</span>' +
+        '</div>' +
+        '<div class="product-info">Product: ' + esc(c.product) + ' | Design: ' + esc(c.design || c.finalProduct) + ' | Source: ' + esc(c.source) + (c.gramRange ? ' | Gram: ' + esc(c.gramRange) : '') + '</div>' +
+      '</div>' +
+      '<div class="followup-actions">' +
+        '<a href="tel:' + c.mobile + '" class="btn-sm btn-call">Call</a>' +
+        '<a href="https://wa.me/91' + c.mobile + '?text=Hello%20' + encodeURIComponent(c.customerName) + '%2C%20This%20is%20from%20Shiva%20Valli%20Vilas%20Jewellers.%20We%20are%20following%20up%20regarding%20your%20recent%20interest%20in%20' + encodeURIComponent(c.product) + '.%20Kindly%20visit%20us%20or%20let%20us%20know%20if%20you%20need%20any%20help." target="_blank" class="btn-sm btn-whatsapp">WhatsApp</a>' +
+      '</div></div>';
+  }).join('');
+}
+
+// ---- CHARTS ----
+function destroyChart(key) { if (charts[key]) { charts[key].destroy(); charts[key] = null; } }
+
+function renderCharts() {
+  var branchCount = {};
+  filteredData.forEach(function(c) { branchCount[c.branch] = (branchCount[c.branch] || 0) + 1; });
+  destroyChart('branch');
+  charts.branch = new Chart(document.getElementById('chartBranch'), {
+    type: 'bar', data: { labels: Object.keys(branchCount), datasets: [{ data: Object.values(branchCount), backgroundColor: ['#1B5E20', '#D4A574', '#C62828', '#1565C0'], borderRadius: 6 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+  });
+
+  var priCount = {};
+  filteredData.forEach(function(c) { var p = normalizePriority(c.priority); priCount[p] = (priCount[p] || 0) + 1; });
+  destroyChart('priority');
+  charts.priority = new Chart(document.getElementById('chartPriority'), {
+    type: 'doughnut', data: { labels: Object.keys(priCount), datasets: [{ data: Object.values(priCount), backgroundColor: ['#C62828', '#E65100', '#F57F17', '#6A1B9A', '#8A8A8A'], borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  var saleCount = {};
+  filteredData.forEach(function(c) { var s = c.saleStatus || 'Pending'; saleCount[s] = (saleCount[s] || 0) + 1; });
+  destroyChart('sale');
+  charts.sale = new Chart(document.getElementById('chartSale'), {
+    type: 'doughnut', data: { labels: Object.keys(saleCount), datasets: [{ data: Object.values(saleCount), backgroundColor: ['#1B5E20', '#C62828', '#E65100', '#1565C0'], borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  var srcCount = {};
+  filteredData.forEach(function(c) { srcCount[c.source || 'Unknown'] = (srcCount[c.source || 'Unknown'] || 0) + 1; });
+  destroyChart('source');
+  charts.source = new Chart(document.getElementById('chartSource'), {
+    type: 'pie', data: { labels: Object.keys(srcCount), datasets: [{ data: Object.values(srcCount), backgroundColor: ['#1B5E20', '#D4A574', '#C62828', '#1565C0', '#6A1B9A', '#8A8A8A'], borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  var metalBranch = {};
+  filteredData.forEach(function(c) { var k = c.branch + '-' + c.metalType; metalBranch[k] = (metalBranch[k] || 0) + 1; });
+  var brs = [];
+  filteredData.forEach(function(c) { if (brs.indexOf(c.branch) < 0) brs.push(c.branch); });
+  destroyChart('metal');
+  charts.metal = new Chart(document.getElementById('chartMetal'), {
+    type: 'bar', data: {
+      labels: brs,
+      datasets: [
+        { label: 'Gold', data: brs.map(function(b) { return metalBranch[b + '-GOLD'] || 0; }), backgroundColor: '#D4A574', borderRadius: 4 },
+        { label: 'Silver', data: brs.map(function(b) { return metalBranch[b + '-SILVER'] || 0; }), backgroundColor: '#78909C', borderRadius: 4 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  var empCount = {};
+  filteredData.forEach(function(c) { empCount[c.employee || 'Unknown'] = (empCount[c.employee || 'Unknown'] || 0) + 1; });
+  var topEmps = Object.entries(empCount).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 15);
+  destroyChart('employee');
+  charts.employee = new Chart(document.getElementById('chartEmployee'), {
+    type: 'bar', data: { labels: topEmps.map(function(e) { return e[0]; }), datasets: [{ data: topEmps.map(function(e) { return e[1]; }), backgroundColor: '#1B5E20', borderRadius: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, indexAxis: 'y' }
+  });
+}
+
+function renderReportCharts() {
+  var priCount = {};
+  allData.forEach(function(c) { var p = normalizePriority(c.priority); priCount[p] = (priCount[p] || 0) + 1; });
+  destroyChart('rptPriority');
+  charts.rptPriority = new Chart(document.getElementById('rptPriority'), {
+    type: 'doughnut', data: { labels: Object.keys(priCount), datasets: [{ data: Object.values(priCount), backgroundColor: ['#C62828', '#E65100', '#F57F17', '#6A1B9A', '#8A8A8A'], borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  var saleCount = {};
+  allData.forEach(function(c) { var s = c.saleStatus || 'Pending'; saleCount[s] = (saleCount[s] || 0) + 1; });
+  destroyChart('rptSale');
+  charts.rptSale = new Chart(document.getElementById('rptSale'), {
+    type: 'pie', data: { labels: Object.keys(saleCount), datasets: [{ data: Object.values(saleCount), backgroundColor: ['#1B5E20', '#C62828', '#E65100'], borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  var brCount = {};
+  allData.forEach(function(c) { brCount[c.branch] = (brCount[c.branch] || 0) + 1; });
+  destroyChart('rptBranch');
+  charts.rptBranch = new Chart(document.getElementById('rptBranch'), {
+    type: 'bar', data: { labels: Object.keys(brCount), datasets: [{ data: Object.values(brCount), backgroundColor: ['#1B5E20', '#D4A574', '#C62828', '#1565C0'], borderRadius: 6 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+  });
+
+  var srcCount = {};
+  allData.forEach(function(c) { srcCount[c.source || 'Unknown'] = (srcCount[c.source || 'Unknown'] || 0) + 1; });
+  destroyChart('rptSource');
+  charts.rptSource = new Chart(document.getElementById('rptSource'), {
+    type: 'pie', data: { labels: Object.keys(srcCount), datasets: [{ data: Object.values(srcCount), backgroundColor: ['#1B5E20', '#D4A574', '#C62828', '#1565C0', '#6A1B9A', '#8A8A8A'], borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  var empCount = {};
+  allData.forEach(function(c) { empCount[c.employee || 'Unknown'] = (empCount[c.employee || 'Unknown'] || 0) + 1; });
+  var sorted = Object.entries(empCount).sort(function(a, b) { return b[1] - a[1]; });
+  destroyChart('rptEmp');
+  charts.rptEmp = new Chart(document.getElementById('rptEmp'), {
+    type: 'bar', data: { labels: sorted.map(function(e) { return e[0]; }), datasets: [{ data: sorted.map(function(e) { return e[1]; }), backgroundColor: '#1B5E20', borderRadius: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, indexAxis: 'y' }
+  });
+}
+
+// ---- DETAIL MODAL ----
+function openDetail(id) {
+  var c = allData.find(function(x) { return x.id === id; });
+  if (!c) return;
+  document.getElementById('modalTitle').textContent = c.customerName + ' - Details';
+  var body = document.getElementById('modalBody');
+  body.innerHTML = '<div class="detail-grid">' +
+    '<div class="detail-item"><div class="label">Customer Name</div><div class="value">' + esc(c.customerName) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Mobile</div><div class="value">' + esc(c.mobile) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Branch</div><div class="value">' + esc(c.branch) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Employee</div><div class="value">' + esc(c.employee) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Metal</div><div class="value"><span class="badge ' + (c.metalType === 'GOLD' ? 'gold' : 'silver') + '">' + esc(c.metalType) + '</span></div></div>' +
+    '<div class="detail-item"><div class="label">Counter</div><div class="value">' + esc(c.counter) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Product</div><div class="value">' + esc(c.product) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Design</div><div class="value">' + esc(c.design) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Size</div><div class="value">' + esc(c.size) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Gram Range</div><div class="value">' + esc(c.gramRange) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Priority</div><div class="value"><span class="badge ' + priorityClass(c.priority) + '">' + esc(normalizePriority(c.priority)) + '</span></div></div>' +
+    '<div class="detail-item"><div class="label">Sale Status</div><div class="value"><span class="badge ' + saleBadge(c.saleStatus) + '">' + esc(c.saleStatus || 'Pending') + '</span></div></div>' +
+    '<div class="detail-item"><div class="label">Source</div><div class="value">' + esc(c.source) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Mgmt Approval</div><div class="value"><span class="badge ' + mgmtBadge(c.mgmtApproval) + '">' + esc(c.mgmtApproval) + '</span></div></div>' +
+    '<div class="detail-item"><div class="label">Request to Inventory</div><div class="value">' + esc(c.requestInventory) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Product Sent</div><div class="value">' + esc(c.productSent) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Product Arrived</div><div class="value">' + esc(c.productArrived) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Date</div><div class="value">' + fmtDate(c.date) + '</div></div>' +
+    '<div class="detail-item full"><div class="label">Remarks</div><div class="value">' + esc(c.purchaseChance) + '</div></div>' +
+    '<div class="detail-item full"><div class="label">Final Product</div><div class="value">' + esc(c.finalProduct) + '</div></div></div>';
+  if (c.mobile) {
+    body.innerHTML += '<div style="margin-top:16px;display:flex;gap:8px">' +
+      '<a href="tel:' + c.mobile + '" class="btn btn-primary">Call Customer</a>' +
+      '<a href="https://wa.me/91' + c.mobile + '?text=Hello%20' + encodeURIComponent(c.customerName) + '%2C%20This%20is%20from%20Shiva%20Valli%20Vilas%20Jewellers.%20We%20are%20following%20up%20regarding%20your%20recent%20interest%20in%20' + encodeURIComponent(c.product) + '.%20Kindly%20visit%20us%20or%20let%20us%20know%20if%20you%20need%20any%20help." target="_blank" class="btn btn-primary" style="background:#25D366;border-color:#25D366">WhatsApp</a></div>';
+  }
+  document.getElementById('detailModal').classList.add('show');
+}
+
+// ---- NAVIGATION ----
+function navigateTo(page, el) {
+  currentPage = page;
+  document.querySelectorAll('.page-section').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  var titles = {
+    'dashboard': 'Customer Follow-Up Dashboard',
+    'action-plan': 'Action Plan - Priority Customers',
+    'urgent': 'URGENT Priority Customers',
+    'week': 'Within a Week - Priority Customers',
+    'days': 'Within 2-4 Days - Priority Customers',
+    'bargain': 'Bargain Customers',
+    'not-priority': 'Not Priority Customers',
+    'completed': 'Completed Sales',
+    'all-customers': 'All Return Customers',
+    'followup': 'Follow-Up Tracking - Branch Database',
+    'reports': 'Reports & Analytics'
+  };
+  document.getElementById('pageTitle').textContent = titles[page] || 'Dashboard';
+  if (page === 'action-plan') renderActionPlan();
+  if (page === 'urgent') renderPriorityTable(allData.filter(function(c) { return normalizePriority(c.priority) === 'URGENT'; }), 'urgentTableBody');
+  if (page === 'week') renderPriorityTable(allData.filter(function(c) { return normalizePriority(c.priority) === 'WITHIN A WEEK'; }), 'weekTableBody');
+  if (page === 'days') renderPriorityTable(allData.filter(function(c) { return normalizePriority(c.priority) === 'WITHIN 2 - 4 DAYS'; }), 'daysTableBody');
+  if (page === 'bargain') renderBargainTable();
+  if (page === 'not-priority') renderPriorityTable(allData.filter(function(c) { return normalizePriority(c.priority) === 'NOT PRIORITY'; }), 'notPriTableBody');
+  if (page === 'completed') renderCompletedTable();
+  if (page === 'all-customers') renderAllTable();
+  if (page === 'followup') renderFollowUpTracking();
+  if (page === 'reports') renderReportCharts();
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+
+// ---- EXPORT ----
+function exportCSV() {
+  var headers = ['Customer', 'Mobile', 'Branch', 'Metal', 'Counter', 'Product', 'Design', 'Gram', 'Priority', 'Source', 'Mgmt', 'SaleStatus', 'Employee', 'Date', 'Remarks'];
+  var rows = filteredData.map(function(c) { return [c.customerName, c.mobile, c.branch, c.metalType, c.counter, c.product, c.design, c.gramRange, normalizePriority(c.priority), c.source, c.mgmtApproval, c.saleStatus, c.employee, c.date, c.purchaseChance]; });
+  var csv = headers.join(',') + '\n';
+  rows.forEach(function(r) { csv += r.map(function(v) { return '"' + String(v || '').replace(/"/g, '""') + '"'; }).join(',') + '\n'; });
+  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  var link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'SVVJ_Customers_' + new Date().toISOString().split('T')[0] + '.csv';
+  link.click();
+  showToast('Exported ' + rows.length + ' records');
+}
+
+// ---- UTILS ----
+function esc(s) { if (!s) return ''; var d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
+function fmtDate(d) { if (!d) return '-'; try { return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); } catch(e) { return d; } }
+function sourceBadge(s) { if (!s || s === 'NA') return 'na'; if (s === 'STOCK IN HAND') return 'completed'; if (s === 'NEW ORDER') return 'week'; if (s === 'ITEM NOT AVAILABLE') return 'not-approved'; return 'pending'; }
+function mgmtBadge(s) { if (s === 'APPROVED') return 'approved'; if (s === 'NOT APPROVED') return 'not-approved'; return 'na'; }
+function saleBadge(s) { if (s === 'COMPLETED') return 'completed'; if (s === "CUSTOMER DIDN'T PURCHASE") return 'not-approved'; return 'pending'; }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function showToast(msg) { var t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg; t.className = 'toast'; setTimeout(function() { t.classList.add('show'); }, 10); setTimeout(function() { t.classList.remove('show'); }, 3000); }
+
+// ---- GOOGLE SHEETS CONNECTION ----
+function updateSyncStatus() {
+  var dot = document.getElementById('syncDot');
+  var label = document.getElementById('syncLabel');
+  if (typeof SHEET_API_URL !== 'undefined' && SHEET_API_URL && SHEET_API_URL !== '') {
+    dot.className = 'sync-dot';
+    label.textContent = 'Google Sheets';
+  } else {
+    dot.className = 'sync-dot offline';
+    label.textContent = 'Local Data';
+  }
+}
+
+async function fetchFromSheet() {
+  var loading = document.getElementById('loadingOverlay');
+  loading.style.display = 'flex';
+  loading.querySelector('.loading-text').textContent = 'Fetching data from Google Sheets...';
+  try {
+    var response = await fetch(SHEET_API_URL + '?action=getCustomers');
+    var result = await response.json();
+    if (result.success && result.data) {
+      allData = result.data.map(function(r, i) {
+        return {
+          id: i,
+          branch: r[0] || '', date: r[1] || '', employee: r[2] || '',
+          metalType: r[3] || '', counter: r[4] || '',
+          customerName: r[5] || '', mobile: r[6] || '',
+          product: r[7] || '', size: r[8] || '', design: r[9] || '',
+          gramRange: r[10] || '', purchaseChance: r[11] || '',
+          priority: r[12] || 'NOT PRIORITY', finalProduct: r[13] || '',
+          requestInventory: r[14] || '', source: r[15] || '',
+          mgmtApproval: r[16] || '', productSent: r[17] || '',
+          timeLag: r[18] || '', productArrived: r[19] || '',
+          saleStatus: r[20] || '',
+          fuStatus: r[21] || '', fuMode: r[22] || '', fuDate: r[23] || ''
+        };
+      });
+      filteredData = allData.slice();
+      populateFilters();
+      applyAllFilters();
+      updateNavBadges();
+      var dot = document.getElementById('syncDot');
+      dot.className = 'sync-dot';
+      document.getElementById('syncLabel').textContent = 'Google Sheets (Live)';
+      showToast('Data synced from Google Sheets (' + allData.length + ' records)');
+    } else {
+      throw new Error(result.error || 'Failed to fetch data');
+    }
+  } catch (err) {
+    console.error('Sheet fetch error:', err);
+    var dot = document.getElementById('syncDot');
+    dot.className = 'sync-dot error';
+    document.getElementById('syncLabel').textContent = 'Sync Failed';
+    showToast('Failed to connect to Google Sheets. Using local data.', 'error');
+    // Fallback to local data
+    if (typeof RAW_DATA !== 'undefined') {
+      parseData();
+      populateFilters();
+      applyAllFilters();
+      updateNavBadges();
+    }
+  } finally {
+    loading.style.display = 'none';
+  }
+}
+
+async function refreshData() {
+  var btn = document.getElementById('refreshBtn');
+  btn.innerHTML = '<svg class="refresh-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Syncing...';
+  if (typeof SHEET_API_URL !== 'undefined' && SHEET_API_URL && SHEET_API_URL !== '') {
+    await fetchFromSheet();
+  } else {
+    // For local mode, try to reload data.js (won't work in browser, just re-parse)
+    if (typeof RAW_DATA !== 'undefined') {
+      parseData();
+      populateFilters();
+      applyAllFilters();
+      updateNavBadges();
+      showToast('Data refreshed from local file');
+    }
+  }
+  setTimeout(function() {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Refresh';
+  }, 1000);
+}
+
+// ---- FOLLOW-UP TRACKING ----
+function getFuMode(c) {
+  var m = (c.fuMode || '').toUpperCase().trim();
+  if (m.indexOf('WHATS') >= 0 || m.indexOf('WA') >= 0) return 'WHATSAPP';
+  if (m.indexOf('PHONE') >= 0 || m.indexOf('CALL') >= 0 || m === 'P') return 'PHONE';
+  return '';
+}
+function isFollowedUp(c) {
+  var st = (c.fuStatus || '').toUpperCase().trim();
+  if (st === 'DONE' || st === 'YES' || st === 'Y' || st === 'FOLLOWED' || st === 'FOLLOW UP DONE') return true;
+  if (getFuMode(c)) return true;
+  return false;
+}
+function renderFollowUpTracking() {
+  var rows = allData;
+  var modeCounts = { 'PHONE': 0, 'WHATSAPP': 0 };
+  var statusCounts = { 'Followed': 0, 'Not Followed': 0 };
+  var branchAgg = {};
+  var empAgg = {};
+
+  rows.forEach(function(c) {
+    var followed = isFollowedUp(c);
+    var mode = getFuMode(c);
+    if (mode === 'PHONE') modeCounts.PHONE++;
+    else if (mode === 'WHATSAPP') modeCounts.WHATSAPP++;
+    if (followed) statusCounts['Followed']++; else statusCounts['Not Followed']++;
+
+    var b = (c.branch || 'NA').trim() || 'NA';
+    var e = (c.employee || 'NA').trim() || 'NA';
+    if (!branchAgg[b]) branchAgg[b] = { total: 0, phone: 0, wa: 0, not: 0 };
+    if (!empAgg[b + '|' + e]) empAgg[b + '|' + e] = { branch: b, emp: e, total: 0, phone: 0, wa: 0, not: 0 };
+    branchAgg[b].total++;
+    empAgg[b + '|' + e].total++;
+    if (followed) {
+      if (mode === 'PHONE') { branchAgg[b].phone++; empAgg[b + '|' + e].phone++; }
+      else if (mode === 'WHATSAPP') { branchAgg[b].wa++; empAgg[b + '|' + e].wa++; }
+      else { branchAgg[b].not++; empAgg[b + '|' + e].not++; }
+    } else {
+      branchAgg[b].not++;
+      empAgg[b + '|' + e].not++;
+    }
+  });
+
+  // Charts
+  renderPieIfReady('fuModeChart', modeCounts, ['Phone Calls', 'WhatsApp']);
+  renderPieIfReady('fuStatusChart', statusCounts, ['Followed', 'Not Followed']);
+  renderPieIfReady('fuBranchChart', branchAgg, null, 'Branch Follow-Ups', 'followedCount');
+  renderBarIfReady('fuEmpChart', empAgg, 'Employee Follow-Ups');
+
+  // Branch -> Employee table
+  var tbody = document.getElementById('fuTableBody');
+  var html = '';
+  var branches = Object.keys(branchAgg).sort();
+  branches.forEach(function(b) {
+    var emps = Object.keys(empAgg).filter(function(k) { return empAgg[k].branch === b; }).sort();
+    emps.forEach(function(k, idx) {
+      var a = empAgg[k];
+      var pct = a.total ? Math.round(((a.phone + a.wa) / a.total) * 100) : 0;
+      html += '<tr>' +
+        '<td>' + (idx === 0 ? '<b>' + b + '</b>' : '') + '</td>' +
+        '<td>' + a.emp + '</td>' +
+        '<td>' + a.total + '</td>' +
+        '<td>' + a.phone + '</td>' +
+        '<td>' + a.wa + '</td>' +
+        '<td>' + a.not + '</td>' +
+        '<td><span class="fu-pct' + (pct >= 60 ? ' good' : pct >= 30 ? ' warn' : '') + '">' + pct + '%</span></td>' +
+        '</tr>';
+    });
+  });
+  tbody.innerHTML = html;
+}
+function followedCount(a) { return (a.phone || 0) + (a.wa || 0); }
+function renderPieIfReady(id, data, labels, title, keyFn) {
+  var canvas = document.getElementById(id);
+  if (!canvas) return;
+  if (charts[id]) { charts[id].destroy(); }
+  var keys = Object.keys(data);
+  var vals = keys.map(function(k) { return keyFn ? data[k][keyFn] : data[k]; });
+  var bg = ['#f8d65a', '#646767', '#111111', '#c9cec9'];
+  charts[id] = new Chart(canvas.getContext('2d'), {
+    type: 'pie',
+    data: { labels: labels || keys, datasets: [{ data: vals, backgroundColor: bg.slice(0, keys.length), borderWidth: 1 }] },
+    options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
+  });
+}
+function renderBarIfReady(id, agg, title) {
+  var canvas = document.getElementById(id);
+  if (!canvas) return;
+  if (charts[id]) { charts[id].destroy(); }
+  var keys = Object.keys(agg);
+  var labels = keys.map(function(k) { return agg[k].emp; });
+  var followed = keys.map(function(k) { return agg[k].phone + agg[k].wa; });
+  var not = keys.map(function(k) { return agg[k].not; });
+  charts[id] = new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Followed', data: followed, backgroundColor: '#f8d65a' },
+        { label: 'Not Followed', data: not, backgroundColor: '#646767' }
+      ]
+    },
+    options: { scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
+  });
+}
+
+</script>
+</body>
+</html>
